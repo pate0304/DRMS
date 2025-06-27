@@ -31,11 +31,15 @@ function findMCPServer() {
         return { type: 'source', path: sourcePath };
     }
     
-    // Check for npm package installation
-    const npmPackagePath = path.dirname(require.resolve('drms-mcp-server/package.json'));
-    const npmServerPath = path.join(npmPackagePath, 'mcp_server.py');
-    if (fs.existsSync(npmServerPath)) {
-        return { type: 'npm', path: npmServerPath };
+    // Check for npm package installation (resolve from this script's location)
+    try {
+        const scriptPath = path.dirname(__filename);
+        const npmServerPath = path.join(scriptPath, '..', 'mcp_server.py');
+        if (fs.existsSync(npmServerPath)) {
+            return { type: 'npm', path: npmServerPath };
+        }
+    } catch (e) {
+        // Ignore resolution errors
     }
     
     // Fall back to installed package
