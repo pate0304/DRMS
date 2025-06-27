@@ -44,15 +44,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install mcp pydantic pydantic-settings
           
-      - name: Test Python modules
+      - name: Test basic imports (config only)
         run: |
           python -c "
           import sys; sys.path.insert(0, 'src')
           from drms.config.settings import Settings
           print('✅ Settings imported')
-          from drms.core.vector_store import VectorStore  
-          print('✅ VectorStore imported')
-          print('✅ All Python modules working')
+          print('✅ Basic modules working')
           "
           
       - name: Test Python syntax
@@ -97,6 +95,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install mcp chromadb sentence-transformers requests beautifulsoup4 pydantic-settings
+          
+      - name: Test full module imports
+        run: |
+          python -c "
+          import sys; sys.path.insert(0, 'src')
+          from drms.config.settings import Settings
+          print('✅ Settings imported')
+          from drms.core.vector_store import VectorStore  
+          print('✅ VectorStore imported')
+          print('✅ All Python modules working with full dependencies')
+          "
           
       - name: Test MCP server startup
         timeout-minutes: 3
