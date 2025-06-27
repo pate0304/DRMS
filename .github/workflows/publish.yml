@@ -71,6 +71,17 @@ jobs:
       - name: Install npm dependencies
         run: npm install --ignore-scripts
         
+      - name: Verify NPM authentication
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "❌ NPM_AUTH_TOKEN secret not found"
+            echo "Please add NPM_AUTH_TOKEN to GitHub repository secrets"
+            exit 1
+          fi
+          echo "✅ NPM authentication token found"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          
       - name: Publish to NPM with provenance
         run: npm publish --provenance --access public
         env:
