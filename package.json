@@ -1,6 +1,6 @@
 {
   "name": "drms-mcp-server",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Documentation RAG MCP Server - Real-time documentation access for AI coding tools",
   "main": "mcp_server.py",
   "bin": {
