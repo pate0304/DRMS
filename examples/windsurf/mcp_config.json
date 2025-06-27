@@ -1,0 +1,15 @@
+{
+  "mcp": {
+    "servers": {
+      "drms": {
+        "command": "python",
+        "args": ["mcp_server.py"],
+        "cwd": "/path/to/DRMS",
+        "environment": {
+          "OPENAI_API_KEY": "your_api_key_here",
+          "DRMS_LOG_LEVEL": "INFO"
+        }
+      }
+    }
+  }
+}

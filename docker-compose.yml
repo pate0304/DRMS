@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  drms-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DRMS_API_HOST=0.0.0.0
+      - DRMS_API_PORT=8000
+      - DRMS_LOG_LEVEL=INFO
+      - DRMS_VECTOR_DB_PATH=/app/data/chroma_db
+      - DRMS_CACHE_DIR=/app/data/cache
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  drms-mcp:
+    build: .
+    command: ["python", "mcp_server.py"]
+    environment:
+      - DRMS_LOG_LEVEL=INFO
+      - DRMS_VECTOR_DB_PATH=/app/data/chroma_db
+      - DRMS_CACHE_DIR=/app/data/cache
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    profiles:
+      - mcp
+
+volumes:
+  drms_data:
+    driver: local

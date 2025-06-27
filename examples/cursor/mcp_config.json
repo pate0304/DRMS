@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "drms": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "/path/to/DRMS",
+      "env": {
+        "OPENAI_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
