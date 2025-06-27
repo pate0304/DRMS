@@ -1,14 +1,13 @@
 {
-  "mcp": {
-    "servers": {
-      "drms": {
-        "command": "python",
-        "args": ["mcp_server.py"],
-        "cwd": "/path/to/DRMS",
-        "environment": {
-          "OPENAI_API_KEY": "your_api_key_here",
-          "DRMS_LOG_LEVEL": "INFO"
-        }
+  "mcpServers": {
+    "drms": {
+      "command": "/Users/YOUR_USERNAME/.drms-env/bin/python",
+      "args": ["mcp_server.py"],
+      "cwd": "/usr/local/lib/node_modules/drms-mcp-server",
+      "env": {
+        "OPENAI_API_KEY": "your_openai_api_key_here",
+        "DRMS_LOG_LEVEL": "INFO",
+        "PYTHONPATH": "/usr/local/lib/node_modules/drms-mcp-server/src"
       }
     }
   }
