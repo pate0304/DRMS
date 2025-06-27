@@ -56,8 +56,17 @@ jobs:
           VERSION=${VERSION#v}
           echo "Setting version to: $VERSION"
           
-          # Update package.json version
-          npm version $VERSION --no-git-tag-version
+          # Get current package.json version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Only update if versions don't match
+          if [ "$VERSION" != "$CURRENT_VERSION" ]; then
+            echo "Updating version from $CURRENT_VERSION to $VERSION"
+            npm version $VERSION --no-git-tag-version
+          else
+            echo "Version already matches, skipping update"
+          fi
           
       - name: Install npm dependencies
         run: npm install --ignore-scripts
