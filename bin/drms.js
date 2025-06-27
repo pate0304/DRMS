@@ -48,7 +48,7 @@ function findMCPServer() {
 
 function showHelp() {
     console.log(`
-DRMS - Documentation RAG MCP Server v1.2.2
+DRMS - Documentation RAG MCP Server v1.2.3
 
 Usage: drms [command] [options]
 
