@@ -80,3 +80,14 @@ class Settings(BaseSettings):
         with open(config_path, 'r') as f:
             config_data = json.load(f)
         return cls(**config_data)
+
+
+# Global settings instance
+_settings = None
+
+def get_settings() -> Settings:
+    """Get global settings instance."""
+    global _settings
+    if _settings is None:
+        _settings = Settings()
+    return _settings

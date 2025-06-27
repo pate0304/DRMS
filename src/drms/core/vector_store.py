@@ -41,7 +41,10 @@ class VectorStore:
             openai.api_key = openai_api_key
             self.embedding_model = None
         else:
-            self.embedding_model = SentenceTransformer(embedding_model)
+            # Force CPU usage to avoid MPS issues
+            import torch
+            device = "cpu"  # Force CPU to avoid MPS crashes
+            self.embedding_model = SentenceTransformer(embedding_model, device=device)
         
         # Create collections for different types of documentation
         self.collections = {

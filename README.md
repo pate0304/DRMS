@@ -30,13 +30,45 @@ DRMS (Documentation RAG MCP Server) provides your AI coding assistants with inst
 
 ### Prerequisites
 - Python 3.8+
+- Node.js 16+ (for npx installation)
 - OpenAI API key (optional, for better embeddings)
 
-### Quick Start
+### Method 1: NPX Quick Install (Recommended)
+
+```bash
+# Install and run directly with npx
+npx drms-mcp-server start
+
+# Or install globally for persistent use
+npm install -g drms-mcp-server
+
+# Then use the CLI anywhere
+drms start                    # Start MCP server
+drms api --port 8000         # Start REST API  
+drms search "React hooks"    # Search documentation
+drms add-source https://docs.python.org  # Add new docs
+drms setup                    # Interactive setup wizard
+drms config                   # Show current configuration
+```
+
+#### CLI Commands Reference
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `drms start` | Start MCP server for IDE integration | `drms start` |
+| `drms api` | Start REST API server | `drms api --port 8001` |
+| `drms search` | Search documentation | `drms search "async functions"` |
+| `drms add-source` | Add documentation source | `drms add-source https://docs.python.org` |
+| `drms list-sources` | List configured sources | `drms list-sources` |
+| `drms setup` | Interactive setup wizard | `drms setup` |
+| `drms config` | Show configuration | `drms config` |
+| `drms test` | Run tests | `drms test` |
+
+### Method 2: Source Installation
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/pate0304/DRMS.git
 cd DRMS
 
 # Create virtual environment (recommended)
@@ -70,10 +102,54 @@ DRMS has been **tested and verified** on:
 - **REST API** health endpoints functional
 - **Basic functionality** tests passing
 
+### Publishing to NPM
+
+To enable the `npx` installation method, you need to publish the package to npm:
+
+```bash
+# 1. Ensure you're logged in to npm
+npm login
+
+# 2. Verify package.json settings
+npm run test        # Run tests first
+npm pack --dry-run  # Preview what will be published
+
+# 3. Publish to npm (first time)
+npm publish --access public
+
+# 4. For updates
+npm version patch   # or minor/major
+npm publish
+```
+
+**Required files for npm package:**
+- ✅ `package.json` - Package metadata
+- ✅ `bin/drms.js` - CLI wrapper script  
+- ✅ `mcp_server.py` - Main Python server
+- ✅ `src/` - Source code directory
+- ✅ `requirements-minimal.txt` - Python dependencies
+- ✅ `README.md` - Documentation
+- ✅ `LICENSE` - License file
+
+Once published, users can install with `npx drms-mcp-server`.
+
 ## 🎯 Integration Guides
 
 ### Cursor Integration
 
+#### Option 1: Using NPX (Recommended)
+```json
+{
+  "mcpServers": {
+    "drms": {
+      "command": "npx",
+      "args": ["drms-mcp-server", "start"]
+    }
+  }
+}
+```
+
+#### Option 2: Source Installation
 1. Install DRMS and start the MCP server
 2. Configure Cursor MCP settings:
    ```json
@@ -91,6 +167,19 @@ DRMS has been **tested and verified** on:
 
 ### Windsurf Integration
 
+#### Option 1: Using NPX (Recommended)
+```json
+{
+  "mcpServers": {
+    "drms": {
+      "command": "npx",
+      "args": ["drms-mcp-server", "start"]
+    }
+  }
+}
+```
+
+#### Option 2: Source Installation
 1. Configure Windsurf MCP settings (see `examples/windsurf/mcp_config.json`)
 2. Restart Windsurf
 3. Use DRMS tools in your development workflow

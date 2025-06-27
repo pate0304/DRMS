@@ -1,11 +1,11 @@
 {
-  "name": "@drms/mcp-server",
+  "name": "drms-mcp-server",
   "version": "1.0.0",
   "description": "Documentation RAG MCP Server - Real-time documentation access for AI coding tools",
   "main": "mcp_server.py",
   "bin": {
-    "drms": "./bin/drms.js",
-    "drms-server": "./bin/drms.js"
+    "drms": "bin/drms.js",
+    "drms-server": "bin/drms.js"
   },
   "scripts": {
     "start": "python mcp_server.py",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pate0304/DRMS.git"
+    "url": "git+https://github.com/pate0304/DRMS.git"
   },
   "keywords": [
     "mcp",

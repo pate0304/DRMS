@@ -1,0 +1,1295 @@
+{
+  "library": "express",
+  "base_url": "https://expressjs.com/",
+  "pages": [
+    {
+      "url": "https://expressjs.com/",
+      "title": "Express - Node.js web application framework",
+      "content": "Express5.1.0 Fast, unopinionated, minimalist web framework for Node.js  npm install express --save const express = require('express') const app = express() const port = 3000 app.get('/', (req, res) = { res.send('Hello World!') }) app.listen(port, () = { console.log(`Example app listening on port {port}`) }) [email protected]: Now the Default on npm with LTS Timeline Express 5.1.0 is now the default on npm, and were introducing an official LTS schedule for the v4 and v5 release lines. Check out our latest blog for more information. Web Applications Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. APIs With a myriad of HTTP utility methods and middleware at your disposal, creating a robust API is quick and easy. Performance Express provides a thin layer of fundamental web application features, without obscuring Node.js features that you know and love. Middleware Express is a lightweight and flexible routing framework with minimal core features meant to be augmented through the use of Express middleware modules.",
+      "code_blocks": [
+        "$ npm install express --save",
+        "$ npm install express --save",
+        "const express = require('express')\nconst app = express()\nconst port = 3000\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(port, () => {\n  console.log(`Example app listening on port ${port}`)\n})",
+        "const express = require('express')\nconst app = express()\nconst port = 3000\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(port, () => {\n  console.log(`Example app listening on port ${port}`)\n})"
+      ],
+      "chunks": [
+        {
+          "content": "Express5 1 0 Fast, unopinionated, minimalist web framework for Node js  npm install express --save const express = require('express') const app = express() const port = 3000 app get('/', (req, res) = { res send('Hello World ') }) app listen(port, () = { console log(`Example app listening on port {port}`) }) [email protected]: Now the Default on npm with LTS Timeline Express 5 1 0 is now the default on npm, and were introducing an official LTS schedule for the v4 and v5 release lines",
+          "url": "https://expressjs.com/",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "Check out our latest blog for more information Web Applications Express is a minimal and flexible Node js web application framework that provides a robust set of features for web and mobile applications APIs With a myriad of HTTP utility methods and middleware at your disposal, creating a robust API is quick and easy Performance Express provides a thin layer of fundamental web application features, without obscuring Node js features that you know and love",
+          "url": "https://expressjs.com/",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "Middleware Express is a lightweight and flexible routing framework with minimal core features meant to be augmented through the use of Express middleware modules",
+          "url": "https://expressjs.com/",
+          "library": "express",
+          "chunk_id": "express_2"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/routing.html",
+      "title": "Express routing",
+      "content": "Routing Routing refers to how an applications endpoints (URIs) respond to client requests. For an introduction to routing, see Basic routing. You define routing using methods of the Express app object that correspond to HTTP methods; for example, app.get() to handle GET requests and app.post to handle POST requests. For a full list, see app.METHOD. You can also use app.all() to handle all HTTP methods and app.use() to specify middleware as the callback function (See Using middleware for details). These routing methods specify a callback function (sometimes called handler functions) called when the application receives a request to the specified route (endpoint) and HTTP method. In other words, the application listens for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function. In fact, the routing methods can have more than one callback function as arguments. With multiple callback functions, it is important to provide next as an argument to the callback function and then call next() within the body of the function to hand off control to the next callback. The following code is an example of a very basic route. const express = require('express') const app = express() // respond with \"hello world\" when a GET request is made to the homepage app.get('/', (req, res) = { res.send('hello world') }) Route methods A route method is derived from one of the HTTP methods, and is attached to an instance of the express class. The following code is an example of routes that are defined for the GET and the POST methods to the root of the app. // GET method route app.get('/', (req, res) = { res.send('GET request to the homepage') }) // POST method route app.post('/', (req, res) = { res.send('POST request to the homepage') }) Express supports methods that correspond to all HTTP request methods: get, post, and so on. For a full list, see app.METHOD. There is a special routing method, app.all(), used to load middleware functions at a path for all HTTP request methods. For example, the following handler is executed for requests to the route \"/secret\" whether using GET, POST, PUT, DELETE, or any other HTTP request method supported in the http module. app.all('/secret', (req, res, next) = { console.log('Accessing the secret section ...') next() // pass control to the next handler }) Route paths Route paths, in combination with a request method, define the endpoints at which requests can be made. Route paths can be strings, string patterns, or regular expressions. Caution In express 5, the characters ?, +, *, [], and () are handled differently than in version 4, please review the migration guide for more information. Caution In express 4, regular expression characters such as  need to be escaped with a \\. Note Express uses path-to-regexp for matching the route paths; see the path-to-regexp documentation for all the possibilities in defining route paths. Express Playground Router is a handy tool for testing basic Express routes, although it does not support pattern matching. Warning Query strings are not part of the route path. Route paths based on strings This route path will match requests to the root route, /. app.get('/', (req, res) = { res.send('root') }) This route path will match requests to /about. app.get('/about', (req, res) = { res.send('about') }) This route path will match requests to /random.text. app.get('/random.text', (req, res) = { res.send('random.text') }) Route paths based on string patterns Caution The string patterns in Express 5 no longer work. Please refer to the migration guide for more information. This route path will match acd and abcd. app.get('/ab?cd', (req, res) = { res.send('ab?cd') }) This route path will match abcd, abbcd, abbbcd, and so on. app.get('/ab+cd', (req, res) = { res.send('ab+cd') }) This route path will match abcd, abxcd, abRANDOMcd, ab123cd, and so on. app.get('/ab*cd', (req, res) = { res.send('ab*cd') }) This route path will match /abe and /abcde. app.get('/ab(cd)?e', (req, res) = { res.send('ab(cd)?e') }) Route paths based on regular expressions This route path will match anything with an a in it. app.get(/a/, (req, res) = { res.send('/a/') }) This route path will match butterfly and dragonfly, but not butterflyman, dragonflyman, and so on. app.get(/.*fly/, (req, res) = { res.send('/.*fly/') }) Route parameters Route parameters are named URL segments that are used to capture the values specified at their position in the URL. The captured values are populated in the req.params object, with the name of the route parameter specified in the path as their respective keys. Route path: /users/:userId/books/:bookId Request URL: http://localhost:3000/users/34/books/8989 req.params: { \"userId\": \"34\", \"bookId\": \"8989\" } To define routes with route parameters, simply specify the route parameters in the path of the route as shown below. app.get('/users/:userId/books/:bookId', (req, res) = { res.send(req.params) }) The name of route parameters must be made up of word characters ([A-Za-z0-9_]). Since the hyphen (-) and the dot (.) are interpreted literally, they can be used along with route parameters for useful purposes. Route path: /flights/:from-:to Request URL: http://localhost:3000/flights/LAX-SFO req.params: { \"from\": \"LAX\", \"to\": \"SFO\" } Route path: /plantae/:genus.:species Request URL: http://localhost:3000/plantae/Prunus.persica req.params: { \"genus\": \"Prunus\", \"species\": \"persica\" } Caution In express 5, Regexp characters are not supported in route paths, for more information please refer to the migration guide. To have more control over the exact string that can be matched by a route parameter, you can append a regular expression in parentheses (()): Route path: /user/:userId(\\d+) Request URL: http://localhost:3000/user/42 req.params: {\"userId\": \"42\"} Warning Because the regular expression is usually part of a literal string, be sure to escape any \\ characters with an additional backslash, for example \\\\d+. Warning In Express 4.x, the * character in regular expressions is not interpreted in the usual way. As a workaround, use {0,} instead of *. This will likely be fixed in Express 5. Route handlers You can provide multiple callback functions that behave like middleware to handle a request. The only exception is that these callbacks might invoke next('route') to bypass the remaining route callbacks. You can use this mechanism to impose pre-conditions on a route, then pass control to subsequent routes if theres no reason to proceed with the current route. Route handlers can be in the form of a function, an array of functions, or combinations of both, as shown in the following examples. A single callback function can handle a route. For example: app.get('/example/a', (req, res) = { res.send('Hello from A!') }) More than one callback function can handle a route (make sure you specify the next object). For example: app.get('/example/b', (req, res, next) = { console.log('the response will be sent by the next function ...') next() }, (req, res) = { res.send('Hello from B!') }) An array of callback functions can handle a route. For example: const cb0 = function (req, res, next) { console.log('CB0') next() } const cb1 = function (req, res, next) { console.log('CB1') next() } const cb2 = function (req, res) { res.send('Hello from C!') } app.get('/example/c', [cb0, cb1, cb2]) A combination of independent functions and arrays of functions can handle a route. For example: const cb0 = function (req, res, next) { console.log('CB0') next() } const cb1 = function (req, res, next) { console.log('CB1') next() } app.get('/example/d', [cb0, cb1], (req, res, next) = { console.log('the response will be sent by the next function ...') next() }, (req, res) = { res.send('Hello from D!') }) Response methods The methods on the response object (res) in the following table can send a response to the client, and terminate the request-response cycle. If none of these methods are called from a route handler, the client request will be left hanging. Method Description res.download() Prompt a file to be downloaded. res.end() End the response process. res.json() Send a JSON response. res.jsonp() Send a JSON response with JSONP support. res.redirect() Redirect a request. res.render() Render a view template. res.send() Send a response of various types. res.sendFile() Send a file as an octet stream. res.sendStatus() Set the response status code and send its string representation as the response body. app.route() You can create chainable route handlers for a route path by using app.route(). Because the path is specified at a single location, creating modular routes is helpful, as is reducing redundancy and typos. For more information about routes, see: Router() documentation. Here is an example of chained route handlers that are defined by using app.route(). app.route('/book') .get((req, res) = { res.send('Get a random book') }) .post((req, res) = { res.send('Add a book') }) .put((req, res) = { res.send('Update the book') }) express.Router Use the express.Router class to create modular, mountable route handlers. A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a mini-app. The following example creates a router as a module, loads a middleware function in it, defines some routes, and mounts the router module on a path in the main app. Create a router file named birds.js in the app directory, with the following content: const express = require('express') const router = express.Router() // middleware that is specific to this router const timeLog = (req, res, next) = { console.log('Time: ', Date.now()) next() } router.use(timeLog) // define the home page route router.get('/', (req, res) = { res.send('Birds home page') }) // define the about route router.get('/about', (req, res) = { res.send('About birds') }) module.exports = router Then, load the router module in the app: const birds = require('./birds') // ... app.use('/birds', birds) The app will now be able to handle requests to /birds and /birds/about, as well as call the timeLog middleware function that is specific to the route. But if the parent route /birds has path parameters, it will not be accessible by default from the sub-routes. To make it accessible, you will need to pass the mergeParams option to the Router constructor reference. const router = express.Router({ mergeParams: true }) Edit this page",
+      "code_blocks": [
+        "const express = require('express')\nconst app = express()\n\n// respond with \"hello world\" when a GET request is made to the homepage\napp.get('/', (req, res) => {\n  res.send('hello world')\n})",
+        "const express = require('express')\nconst app = express()\n\n// respond with \"hello world\" when a GET request is made to the homepage\napp.get('/', (req, res) => {\n  res.send('hello world')\n})",
+        "// GET method route\napp.get('/', (req, res) => {\n  res.send('GET request to the homepage')\n})\n\n// POST method route\napp.post('/', (req, res) => {\n  res.send('POST request to the homepage')\n})",
+        "// GET method route\napp.get('/', (req, res) => {\n  res.send('GET request to the homepage')\n})\n\n// POST method route\napp.post('/', (req, res) => {\n  res.send('POST request to the homepage')\n})",
+        "app.all('/secret', (req, res, next) => {\n  console.log('Accessing the secret section ...')\n  next() // pass control to the next handler\n})",
+        "app.all('/secret', (req, res, next) => {\n  console.log('Accessing the secret section ...')\n  next() // pass control to the next handler\n})",
+        "app.get('/', (req, res) => {\n  res.send('root')\n})",
+        "app.get('/', (req, res) => {\n  res.send('root')\n})",
+        "app.get('/about', (req, res) => {\n  res.send('about')\n})",
+        "app.get('/about', (req, res) => {\n  res.send('about')\n})",
+        "/random.text",
+        "app.get('/random.text', (req, res) => {\n  res.send('random.text')\n})",
+        "app.get('/random.text', (req, res) => {\n  res.send('random.text')\n})",
+        "app.get('/ab?cd', (req, res) => {\n  res.send('ab?cd')\n})",
+        "app.get('/ab?cd', (req, res) => {\n  res.send('ab?cd')\n})",
+        "app.get('/ab+cd', (req, res) => {\n  res.send('ab+cd')\n})",
+        "app.get('/ab+cd', (req, res) => {\n  res.send('ab+cd')\n})",
+        "app.get('/ab*cd', (req, res) => {\n  res.send('ab*cd')\n})",
+        "app.get('/ab*cd', (req, res) => {\n  res.send('ab*cd')\n})",
+        "app.get('/ab(cd)?e', (req, res) => {\n  res.send('ab(cd)?e')\n})",
+        "app.get('/ab(cd)?e', (req, res) => {\n  res.send('ab(cd)?e')\n})",
+        "app.get(/a/, (req, res) => {\n  res.send('/a/')\n})",
+        "app.get(/a/, (req, res) => {\n  res.send('/a/')\n})",
+        "butterflyman",
+        "dragonflyman",
+        "app.get(/.*fly$/, (req, res) => {\n  res.send('/.*fly$/')\n})",
+        "app.get(/.*fly$/, (req, res) => {\n  res.send('/.*fly$/')\n})",
+        "Route path: /users/:userId/books/:bookId\nRequest URL: http://localhost:3000/users/34/books/8989\nreq.params: { \"userId\": \"34\", \"bookId\": \"8989\" }",
+        "Route path: /users/:userId/books/:bookId\nRequest URL: http://localhost:3000/users/34/books/8989\nreq.params: { \"userId\": \"34\", \"bookId\": \"8989\" }",
+        "app.get('/users/:userId/books/:bookId', (req, res) => {\n  res.send(req.params)\n})",
+        "app.get('/users/:userId/books/:bookId', (req, res) => {\n  res.send(req.params)\n})",
+        "Route path: /flights/:from-:to\nRequest URL: http://localhost:3000/flights/LAX-SFO\nreq.params: { \"from\": \"LAX\", \"to\": \"SFO\" }",
+        "Route path: /flights/:from-:to\nRequest URL: http://localhost:3000/flights/LAX-SFO\nreq.params: { \"from\": \"LAX\", \"to\": \"SFO\" }",
+        "Route path: /plantae/:genus.:species\nRequest URL: http://localhost:3000/plantae/Prunus.persica\nreq.params: { \"genus\": \"Prunus\", \"species\": \"persica\" }",
+        "Route path: /plantae/:genus.:species\nRequest URL: http://localhost:3000/plantae/Prunus.persica\nreq.params: { \"genus\": \"Prunus\", \"species\": \"persica\" }",
+        "Route path: /user/:userId(\\d+)\nRequest URL: http://localhost:3000/user/42\nreq.params: {\"userId\": \"42\"}",
+        "Route path: /user/:userId(\\d+)\nRequest URL: http://localhost:3000/user/42\nreq.params: {\"userId\": \"42\"}",
+        "next('route')",
+        "app.get('/example/a', (req, res) => {\n  res.send('Hello from A!')\n})",
+        "app.get('/example/a', (req, res) => {\n  res.send('Hello from A!')\n})",
+        "app.get('/example/b', (req, res, next) => {\n  console.log('the response will be sent by the next function ...')\n  next()\n}, (req, res) => {\n  res.send('Hello from B!')\n})",
+        "app.get('/example/b', (req, res, next) => {\n  console.log('the response will be sent by the next function ...')\n  next()\n}, (req, res) => {\n  res.send('Hello from B!')\n})",
+        "const cb0 = function (req, res, next) {\n  console.log('CB0')\n  next()\n}\n\nconst cb1 = function (req, res, next) {\n  console.log('CB1')\n  next()\n}\n\nconst cb2 = function (req, res) {\n  res.send('Hello from C!')\n}\n\napp.get('/example/c', [cb0, cb1, cb2])",
+        "const cb0 = function (req, res, next) {\n  console.log('CB0')\n  next()\n}\n\nconst cb1 = function (req, res, next) {\n  console.log('CB1')\n  next()\n}\n\nconst cb2 = function (req, res) {\n  res.send('Hello from C!')\n}\n\napp.get('/example/c', [cb0, cb1, cb2])",
+        "const cb0 = function (req, res, next) {\n  console.log('CB0')\n  next()\n}\n\nconst cb1 = function (req, res, next) {\n  console.log('CB1')\n  next()\n}\n\napp.get('/example/d', [cb0, cb1], (req, res, next) => {\n  console.log('the response will be sent by the next function ...')\n  next()\n}, (req, res) => {\n  res.send('Hello from D!')\n})",
+        "const cb0 = function (req, res, next) {\n  console.log('CB0')\n  next()\n}\n\nconst cb1 = function (req, res, next) {\n  console.log('CB1')\n  next()\n}\n\napp.get('/example/d', [cb0, cb1], (req, res, next) => {\n  console.log('the response will be sent by the next function ...')\n  next()\n}, (req, res) => {\n  res.send('Hello from D!')\n})",
+        "app.route()",
+        "app.route()",
+        "app.route('/book')\n  .get((req, res) => {\n    res.send('Get a random book')\n  })\n  .post((req, res) => {\n    res.send('Add a book')\n  })\n  .put((req, res) => {\n    res.send('Update the book')\n  })",
+        "app.route('/book')\n  .get((req, res) => {\n    res.send('Get a random book')\n  })\n  .post((req, res) => {\n    res.send('Add a book')\n  })\n  .put((req, res) => {\n    res.send('Update the book')\n  })",
+        "express.Router",
+        "const express = require('express')\nconst router = express.Router()\n\n// middleware that is specific to this router\nconst timeLog = (req, res, next) => {\n  console.log('Time: ', Date.now())\n  next()\n}\nrouter.use(timeLog)\n\n// define the home page route\nrouter.get('/', (req, res) => {\n  res.send('Birds home page')\n})\n// define the about route\nrouter.get('/about', (req, res) => {\n  res.send('About birds')\n})\n\nmodule.exports = router",
+        "const express = require('express')\nconst router = express.Router()\n\n// middleware that is specific to this router\nconst timeLog = (req, res, next) => {\n  console.log('Time: ', Date.now())\n  next()\n}\nrouter.use(timeLog)\n\n// define the home page route\nrouter.get('/', (req, res) => {\n  res.send('Birds home page')\n})\n// define the about route\nrouter.get('/about', (req, res) => {\n  res.send('About birds')\n})\n\nmodule.exports = router",
+        "const birds = require('./birds')\n\n// ...\n\napp.use('/birds', birds)",
+        "const birds = require('./birds')\n\n// ...\n\napp.use('/birds', birds)",
+        "/birds/about",
+        "mergeParams",
+        "const router = express.Router({ mergeParams: true })",
+        "const router = express.Router({ mergeParams: true })"
+      ],
+      "chunks": [
+        {
+          "content": "Routing Routing refers to how an applications endpoints (URIs) respond to client requests For an introduction to routing, see Basic routing You define routing using methods of the Express app object that correspond to HTTP methods; for example, app get() to handle GET requests and app post to handle POST requests For a full list, see app METHOD You can also use app all() to handle all HTTP methods and app use() to specify middleware as the callback function (See Using middleware for details)",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "These routing methods specify a callback function (sometimes called handler functions) called when the application receives a request to the specified route (endpoint) and HTTP method In other words, the application listens for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function In fact, the routing methods can have more than one callback function as arguments",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "With multiple callback functions, it is important to provide next as an argument to the callback function and then call next() within the body of the function to hand off control to the next callback The following code is an example of a very basic route const express = require('express') const app = express() // respond with \"hello world\" when a GET request is made to the homepage app get('/', (req, res) = { res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "send('hello world') }) Route methods A route method is derived from one of the HTTP methods, and is attached to an instance of the express class The following code is an example of routes that are defined for the GET and the POST methods to the root of the app // GET method route app get('/', (req, res) = { res send('GET request to the homepage') }) // POST method route app post('/', (req, res) = { res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "send('POST request to the homepage') }) Express supports methods that correspond to all HTTP request methods: get, post, and so on For a full list, see app METHOD There is a special routing method, app all(), used to load middleware functions at a path for all HTTP request methods For example, the following handler is executed for requests to the route \"/secret\" whether using GET, POST, PUT, DELETE, or any other HTTP request method supported in the http module app",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "all('/secret', (req, res, next) = { console log('Accessing the secret section ') next() // pass control to the next handler }) Route paths Route paths, in combination with a request method, define the endpoints at which requests can be made Route paths can be strings, string patterns, or regular expressions Caution In express 5, the characters , +, *, [], and () are handled differently than in version 4, please review the migration guide for more information",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "Caution In express 4, regular expression characters such as  need to be escaped with a \\ Note Express uses path-to-regexp for matching the route paths; see the path-to-regexp documentation for all the possibilities in defining route paths Express Playground Router is a handy tool for testing basic Express routes, although it does not support pattern matching Warning Query strings are not part of the route path Route paths based on strings This route path will match requests to the root route, /",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "app get('/', (req, res) = { res send('root') }) This route path will match requests to /about app get('/about', (req, res) = { res send('about') }) This route path will match requests to /random text app get('/random text', (req, res) = { res send('random text') }) Route paths based on string patterns Caution The string patterns in Express 5 no longer work Please refer to the migration guide for more information This route path will match acd and abcd app get('/ab cd', (req, res) = { res send('ab",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "cd') }) This route path will match abcd, abbcd, abbbcd, and so on app get('/ab+cd', (req, res) = { res send('ab+cd') }) This route path will match abcd, abxcd, abRANDOMcd, ab123cd, and so on app get('/ab*cd', (req, res) = { res send('ab*cd') }) This route path will match /abe and /abcde app get('/ab(cd) e', (req, res) = { res send('ab(cd) e') }) Route paths based on regular expressions This route path will match anything with an a in it app get(/a/, (req, res) = { res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        },
+        {
+          "content": "send('/a/') }) This route path will match butterfly and dragonfly, but not butterflyman, dragonflyman, and so on app get(/ *fly/, (req, res) = { res send('/ *fly/') }) Route parameters Route parameters are named URL segments that are used to capture the values specified at their position in the URL The captured values are populated in the req params object, with the name of the route parameter specified in the path as their respective keys",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_9"
+        },
+        {
+          "content": "Route path: /users/:userId/books/:bookId Request URL: http://localhost:3000/users/34/books/8989 req params: { \"userId\": \"34\", \"bookId\": \"8989\" } To define routes with route parameters, simply specify the route parameters in the path of the route as shown below app get('/users/:userId/books/:bookId', (req, res) = { res send(req params) }) The name of route parameters must be made up of word characters ([A-Za-z0-9_]) Since the hyphen (-) and the dot (",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_10"
+        },
+        {
+          "content": ") are interpreted literally, they can be used along with route parameters for useful purposes Route path: /flights/:from-:to Request URL: http://localhost:3000/flights/LAX-SFO req params: { \"from\": \"LAX\", \"to\": \"SFO\" } Route path: /plantae/:genus :species Request URL: http://localhost:3000/plantae/Prunus persica req params: { \"genus\": \"Prunus\", \"species\": \"persica\" } Caution In express 5, Regexp characters are not supported in route paths, for more information please refer to the migration guide",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_11"
+        },
+        {
+          "content": "To have more control over the exact string that can be matched by a route parameter, you can append a regular expression in parentheses (()): Route path: /user/:userId(\\d+) Request URL: http://localhost:3000/user/42 req params: {\"userId\": \"42\"} Warning Because the regular expression is usually part of a literal string, be sure to escape any \\ characters with an additional backslash, for example \\\\d+ Warning In Express 4 x, the * character in regular expressions is not interpreted in the usual way",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_12"
+        },
+        {
+          "content": "As a workaround, use {0,} instead of * This will likely be fixed in Express 5 Route handlers You can provide multiple callback functions that behave like middleware to handle a request The only exception is that these callbacks might invoke next('route') to bypass the remaining route callbacks You can use this mechanism to impose pre-conditions on a route, then pass control to subsequent routes if theres no reason to proceed with the current route",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_13"
+        },
+        {
+          "content": "Route handlers can be in the form of a function, an array of functions, or combinations of both, as shown in the following examples A single callback function can handle a route For example: app get('/example/a', (req, res) = { res send('Hello from A ') }) More than one callback function can handle a route (make sure you specify the next object) For example: app get('/example/b', (req, res, next) = { console log('the response will be sent by the next function ') next() }, (req, res) = { res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_14"
+        },
+        {
+          "content": "send('Hello from B ') }) An array of callback functions can handle a route For example: const cb0 = function (req, res, next) { console log('CB0') next() } const cb1 = function (req, res, next) { console log('CB1') next() } const cb2 = function (req, res) { res send('Hello from C ') } app get('/example/c', [cb0, cb1, cb2]) A combination of independent functions and arrays of functions can handle a route For example: const cb0 = function (req, res, next) { console",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_15"
+        },
+        {
+          "content": "log('CB0') next() } const cb1 = function (req, res, next) { console log('CB1') next() } app get('/example/d', [cb0, cb1], (req, res, next) = { console log('the response will be sent by the next function ') next() }, (req, res) = { res send('Hello from D ') }) Response methods The methods on the response object (res) in the following table can send a response to the client, and terminate the request-response cycle",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_16"
+        },
+        {
+          "content": "If none of these methods are called from a route handler, the client request will be left hanging Method Description res download() Prompt a file to be downloaded res end() End the response process res json() Send a JSON response res jsonp() Send a JSON response with JSONP support res redirect() Redirect a request res render() Render a view template res send() Send a response of various types res sendFile() Send a file as an octet stream res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_17"
+        },
+        {
+          "content": "sendStatus() Set the response status code and send its string representation as the response body app route() You can create chainable route handlers for a route path by using app route() Because the path is specified at a single location, creating modular routes is helpful, as is reducing redundancy and typos For more information about routes, see: Router() documentation Here is an example of chained route handlers that are defined by using app route() app route('/book') get((req, res) = { res",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_18"
+        },
+        {
+          "content": "send('Get a random book') }) post((req, res) = { res send('Add a book') }) put((req, res) = { res send('Update the book') }) express Router Use the express Router class to create modular, mountable route handlers A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a mini-app The following example creates a router as a module, loads a middleware function in it, defines some routes, and mounts the router module on a path in the main app",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_19"
+        },
+        {
+          "content": "Create a router file named birds js in the app directory, with the following content: const express = require('express') const router = express Router() // middleware that is specific to this router const timeLog = (req, res, next) = { console log('Time: ', Date now()) next() } router use(timeLog) // define the home page route router get('/', (req, res) = { res send('Birds home page') }) // define the about route router get('/about', (req, res) = { res send('About birds') }) module",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_20"
+        },
+        {
+          "content": "exports = router Then, load the router module in the app: const birds = require(' /birds') // app use('/birds', birds) The app will now be able to handle requests to /birds and /birds/about, as well as call the timeLog middleware function that is specific to the route But if the parent route /birds has path parameters, it will not be accessible by default from the sub-routes To make it accessible, you will need to pass the mergeParams option to the Router constructor reference",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_21"
+        },
+        {
+          "content": "const router = express Router({ mergeParams: true }) Edit this page",
+          "url": "https://expressjs.com/en/guide/routing.html",
+          "library": "express",
+          "chunk_id": "express_22"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/writing-middleware.html",
+      "title": "Writing middleware for use in Express apps",
+      "content": "Writing middleware for use in Express apps Overview Middleware functions are functions that have access to the request object (req), the response object (res), and the next function in the applications request-response cycle. The next function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware. Middleware functions can perform the following tasks: Execute any code. Make changes to the request and the response objects. End the request-response cycle. Call the next middleware in the stack. If the current middleware function does not end the request-response cycle, it must call next() to pass control to the next middleware function. Otherwise, the request will be left hanging. The following figure shows the elements of a middleware function call: HTTP method for which the middleware function applies. Path (route) for which the middleware function applies. The middleware function. Callback argument to the middleware function, called \"next\" by convention. HTTP response argument to the middleware function, called \"res\" by convention. HTTP request argument to the middleware function, called \"req\" by convention. Starting with Express 5, middleware functions that return a Promise will call next(value) when they reject or throw an error. next will be called with either the rejected value or the thrown Error. Example Here is an example of a simple Hello World Express application. The remainder of this article will define and add three middleware functions to the application: one called myLogger that prints a simple log message, one called requestTime that displays the timestamp of the HTTP request, and one called validateCookies that validates incoming cookies. const express = require('express') const app = express() app.get('/', (req, res) = { res.send('Hello World!') }) app.listen(3000) Middleware function myLogger Here is a simple example of a middleware function called myLogger. This function just prints LOGGED when a request to the app passes through it. The middleware function is assigned to a variable named myLogger. const myLogger = function (req, res, next) { console.log('LOGGED') next() } Notice the call above to next(). Calling this function invokes the next middleware function in the app. The next() function is not a part of the Node.js or Express API, but is the third argument that is passed to the middleware function. The next() function could be named anything, but by convention it is always named next. To avoid confusion, always use this convention. To load the middleware function, call app.use(), specifying the middleware function. For example, the following code loads the myLogger middleware function before the route to the root path (/). const express = require('express') const app = express() const myLogger = function (req, res, next) { console.log('LOGGED') next() } app.use(myLogger) app.get('/', (req, res) = { res.send('Hello World!') }) app.listen(3000) Every time the app receives a request, it prints the message LOGGED to the terminal. The order of middleware loading is important: middleware functions that are loaded first are also executed first. If myLogger is loaded after the route to the root path, the request never reaches it and the app doesnt print LOGGED, because the route handler of the root path terminates the request-response cycle. The middleware function myLogger simply prints a message, then passes on the request to the next middleware function in the stack by calling the next() function. Middleware function requestTime Next, well create a middleware function called requestTime and add a property called requestTime to the request object. const requestTime = function (req, res, next) { req.requestTime = Date.now() next() } The app now uses the requestTime middleware function. Also, the callback function of the root path route uses the property that the middleware function adds to req (the request object). const express = require('express') const app = express() const requestTime = function (req, res, next) { req.requestTime = Date.now() next() } app.use(requestTime) app.get('/', (req, res) = { let responseText = 'Hello World!br' responseText += `smallRequested at: {req.requestTime}/small` res.send(responseText) }) app.listen(3000) When you make a request to the root of the app, the app now displays the timestamp of your request in the browser. Middleware function validateCookies Finally, well create a middleware function that validates incoming cookies and sends a 400 response if cookies are invalid. Heres an example function that validates cookies with an external async service. async function cookieValidator (cookies) { try { await externallyValidateCookie(cookies.testCookie) } catch { throw new Error('Invalid cookies') } } Here, we use the cookie-parser middleware to parse incoming cookies off the req object and pass them to our cookieValidator function. The validateCookies middleware returns a Promise that upon rejection will automatically trigger our error handler. const express = require('express') const cookieParser = require('cookie-parser') const cookieValidator = require('./cookieValidator') const app = express() async function validateCookies (req, res, next) { await cookieValidator(req.cookies) next() } app.use(cookieParser()) app.use(validateCookies) // error handler app.use((err, req, res, next) = { res.status(400).send(err.message) }) app.listen(3000) Note how next() is called after await cookieValidator(req.cookies). This ensures that if cookieValidator resolves, the next middleware in the stack will get called. If you pass anything to the next() function (except the string 'route' or 'router'), Express regards the current request as being an error and will skip any remaining non-error handling routing and middleware functions. Because you have access to the request object, the response object, the next middleware function in the stack, and the whole Node.js API, the possibilities with middleware functions are endless. For more information about Express middleware, see: Using Express middleware. Configurable middleware If you need your middleware to be configurable, export a function which accepts an options object or other parameters, which, then returns the middleware implementation based on the input parameters. File: my-middleware.js module.exports = function (options) { return function (req, res, next) { // Implement the middleware function based on the options object next() } } The middleware can now be used as shown below. const mw = require('./my-middleware.js') app.use(mw({ option1: '1', option2: '2' })) Refer to cookie-session and compression for examples of configurable middleware. Edit this page",
+      "code_blocks": [
+        "next(value)",
+        "requestTime",
+        "validateCookies",
+        "const express = require('express')\nconst app = express()\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(3000)",
+        "const express = require('express')\nconst app = express()\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(3000)",
+        "const myLogger = function (req, res, next) {\n  console.log('LOGGED')\n  next()\n}",
+        "const myLogger = function (req, res, next) {\n  console.log('LOGGED')\n  next()\n}",
+        "const express = require('express')\nconst app = express()\n\nconst myLogger = function (req, res, next) {\n  console.log('LOGGED')\n  next()\n}\n\napp.use(myLogger)\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(3000)",
+        "const express = require('express')\nconst app = express()\n\nconst myLogger = function (req, res, next) {\n  console.log('LOGGED')\n  next()\n}\n\napp.use(myLogger)\n\napp.get('/', (req, res) => {\n  res.send('Hello World!')\n})\n\napp.listen(3000)",
+        "requestTime",
+        "const requestTime = function (req, res, next) {\n  req.requestTime = Date.now()\n  next()\n}",
+        "const requestTime = function (req, res, next) {\n  req.requestTime = Date.now()\n  next()\n}",
+        "requestTime",
+        "const express = require('express')\nconst app = express()\n\nconst requestTime = function (req, res, next) {\n  req.requestTime = Date.now()\n  next()\n}\n\napp.use(requestTime)\n\napp.get('/', (req, res) => {\n  let responseText = 'Hello World!<br>'\n  responseText += `<small>Requested at: ${req.requestTime}</small>`\n  res.send(responseText)\n})\n\napp.listen(3000)",
+        "const express = require('express')\nconst app = express()\n\nconst requestTime = function (req, res, next) {\n  req.requestTime = Date.now()\n  next()\n}\n\napp.use(requestTime)\n\napp.get('/', (req, res) => {\n  let responseText = 'Hello World!<br>'\n  responseText += `<small>Requested at: ${req.requestTime}</small>`\n  res.send(responseText)\n})\n\napp.listen(3000)",
+        "async function cookieValidator (cookies) {\n  try {\n    await externallyValidateCookie(cookies.testCookie)\n  } catch {\n    throw new Error('Invalid cookies')\n  }\n}",
+        "async function cookieValidator (cookies) {\n  try {\n    await externallyValidateCookie(cookies.testCookie)\n  } catch {\n    throw new Error('Invalid cookies')\n  }\n}",
+        "cookie-parser",
+        "cookieValidator",
+        "validateCookies",
+        "const express = require('express')\nconst cookieParser = require('cookie-parser')\nconst cookieValidator = require('./cookieValidator')\n\nconst app = express()\n\nasync function validateCookies (req, res, next) {\n  await cookieValidator(req.cookies)\n  next()\n}\n\napp.use(cookieParser())\n\napp.use(validateCookies)\n\n// error handler\napp.use((err, req, res, next) => {\n  res.status(400).send(err.message)\n})\n\napp.listen(3000)",
+        "const express = require('express')\nconst cookieParser = require('cookie-parser')\nconst cookieValidator = require('./cookieValidator')\n\nconst app = express()\n\nasync function validateCookies (req, res, next) {\n  await cookieValidator(req.cookies)\n  next()\n}\n\napp.use(cookieParser())\n\napp.use(validateCookies)\n\n// error handler\napp.use((err, req, res, next) => {\n  res.status(400).send(err.message)\n})\n\napp.listen(3000)",
+        "await cookieValidator(req.cookies)",
+        "cookieValidator",
+        "my-middleware.js",
+        "module.exports = function (options) {\n  return function (req, res, next) {\n    // Implement the middleware function based on the options object\n    next()\n  }\n}",
+        "module.exports = function (options) {\n  return function (req, res, next) {\n    // Implement the middleware function based on the options object\n    next()\n  }\n}",
+        "const mw = require('./my-middleware.js')\n\napp.use(mw({ option1: '1', option2: '2' }))",
+        "const mw = require('./my-middleware.js')\n\napp.use(mw({ option1: '1', option2: '2' }))"
+      ],
+      "chunks": [
+        {
+          "content": "Writing middleware for use in Express apps Overview Middleware functions are functions that have access to the request object (req), the response object (res), and the next function in the applications request-response cycle The next function is a function in the Express router which, when invoked, executes the middleware succeeding the current middleware Middleware functions can perform the following tasks: Execute any code Make changes to the request and the response objects",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "End the request-response cycle Call the next middleware in the stack If the current middleware function does not end the request-response cycle, it must call next() to pass control to the next middleware function Otherwise, the request will be left hanging The following figure shows the elements of a middleware function call: HTTP method for which the middleware function applies Path (route) for which the middleware function applies The middleware function",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "Callback argument to the middleware function, called \"next\" by convention HTTP response argument to the middleware function, called \"res\" by convention HTTP request argument to the middleware function, called \"req\" by convention Starting with Express 5, middleware functions that return a Promise will call next(value) when they reject or throw an error next will be called with either the rejected value or the thrown Error Example Here is an example of a simple Hello World Express application",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "The remainder of this article will define and add three middleware functions to the application: one called myLogger that prints a simple log message, one called requestTime that displays the timestamp of the HTTP request, and one called validateCookies that validates incoming cookies const express = require('express') const app = express() app get('/', (req, res) = { res send('Hello World ') }) app",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "listen(3000) Middleware function myLogger Here is a simple example of a middleware function called myLogger This function just prints LOGGED when a request to the app passes through it The middleware function is assigned to a variable named myLogger const myLogger = function (req, res, next) { console log('LOGGED') next() } Notice the call above to next() Calling this function invokes the next middleware function in the app The next() function is not a part of the Node",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "js or Express API, but is the third argument that is passed to the middleware function The next() function could be named anything, but by convention it is always named next To avoid confusion, always use this convention To load the middleware function, call app use(), specifying the middleware function For example, the following code loads the myLogger middleware function before the route to the root path (/)",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "const express = require('express') const app = express() const myLogger = function (req, res, next) { console log('LOGGED') next() } app use(myLogger) app get('/', (req, res) = { res send('Hello World ') }) app listen(3000) Every time the app receives a request, it prints the message LOGGED to the terminal The order of middleware loading is important: middleware functions that are loaded first are also executed first",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "If myLogger is loaded after the route to the root path, the request never reaches it and the app doesnt print LOGGED, because the route handler of the root path terminates the request-response cycle The middleware function myLogger simply prints a message, then passes on the request to the next middleware function in the stack by calling the next() function",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "Middleware function requestTime Next, well create a middleware function called requestTime and add a property called requestTime to the request object const requestTime = function (req, res, next) { req requestTime = Date now() next() } The app now uses the requestTime middleware function Also, the callback function of the root path route uses the property that the middleware function adds to req (the request object)",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        },
+        {
+          "content": "const express = require('express') const app = express() const requestTime = function (req, res, next) { req requestTime = Date now() next() } app use(requestTime) app get('/', (req, res) = { let responseText = 'Hello World br' responseText += `smallRequested at: {req requestTime}/small` res send(responseText) }) app listen(3000) When you make a request to the root of the app, the app now displays the timestamp of your request in the browser",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_9"
+        },
+        {
+          "content": "Middleware function validateCookies Finally, well create a middleware function that validates incoming cookies and sends a 400 response if cookies are invalid Heres an example function that validates cookies with an external async service async function cookieValidator (cookies) { try { await externallyValidateCookie(cookies",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_10"
+        },
+        {
+          "content": "testCookie) } catch { throw new Error('Invalid cookies') } } Here, we use the cookie-parser middleware to parse incoming cookies off the req object and pass them to our cookieValidator function The validateCookies middleware returns a Promise that upon rejection will automatically trigger our error handler const express = require('express') const cookieParser = require('cookie-parser') const cookieValidator = require('",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_11"
+        },
+        {
+          "content": "/cookieValidator') const app = express() async function validateCookies (req, res, next) { await cookieValidator(req cookies) next() } app use(cookieParser()) app use(validateCookies) // error handler app use((err, req, res, next) = { res status(400) send(err message) }) app listen(3000) Note how next() is called after await cookieValidator(req cookies) This ensures that if cookieValidator resolves, the next middleware in the stack will get called",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_12"
+        },
+        {
+          "content": "If you pass anything to the next() function (except the string 'route' or 'router'), Express regards the current request as being an error and will skip any remaining non-error handling routing and middleware functions Because you have access to the request object, the response object, the next middleware function in the stack, and the whole Node js API, the possibilities with middleware functions are endless For more information about Express middleware, see: Using Express middleware",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_13"
+        },
+        {
+          "content": "Configurable middleware If you need your middleware to be configurable, export a function which accepts an options object or other parameters, which, then returns the middleware implementation based on the input parameters File: my-middleware js module exports = function (options) { return function (req, res, next) { // Implement the middleware function based on the options object next() } } The middleware can now be used as shown below const mw = require(' /my-middleware js') app",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_14"
+        },
+        {
+          "content": "use(mw({ option1: '1', option2: '2' })) Refer to cookie-session and compression for examples of configurable middleware Edit this page",
+          "url": "https://expressjs.com/en/guide/writing-middleware.html",
+          "library": "express",
+          "chunk_id": "express_15"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/using-middleware.html",
+      "title": "Using Express middleware",
+      "content": "Using middleware Express is a routing and middleware web framework that has minimal functionality of its own: An Express application is essentially a series of middleware function calls. Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the applications request-response cycle. The next middleware function is commonly denoted by a variable named next. Middleware functions can perform the following tasks: Execute any code. Make changes to the request and the response objects. End the request-response cycle. Call the next middleware function in the stack. If the current middleware function does not end the request-response cycle, it must call next() to pass control to the next middleware function. Otherwise, the request will be left hanging. An Express application can use the following types of middleware: Application-level middleware Router-level middleware Error-handling middleware Built-in middleware Third-party middleware You can load application-level and router-level middleware with an optional mount path. You can also load a series of middleware functions together, which creates a sub-stack of the middleware system at a mount point. Application-level middleware Bind application-level middleware to an instance of the app object by using the app.use() and app.METHOD() functions, where METHOD is the HTTP method of the request that the middleware function handles (such as GET, PUT, or POST) in lowercase. This example shows a middleware function with no mount path. The function is executed every time the app receives a request. const express = require('express') const app = express() app.use((req, res, next) = { console.log('Time:', Date.now()) next() }) This example shows a middleware function mounted on the /user/:id path. The function is executed for any type of HTTP request on the /user/:id path. app.use('/user/:id', (req, res, next) = { console.log('Request Type:', req.method) next() }) This example shows a route and its handler function (middleware system). The function handles GET requests to the /user/:id path. app.get('/user/:id', (req, res, next) = { res.send('USER') }) Here is an example of loading a series of middleware functions at a mount point, with a mount path. It illustrates a middleware sub-stack that prints request info for any type of HTTP request to the /user/:id path. app.use('/user/:id', (req, res, next) = { console.log('Request URL:', req.originalUrl) next() }, (req, res, next) = { console.log('Request Type:', req.method) next() }) Route handlers enable you to define multiple routes for a path. The example below defines two routes for GET requests to the /user/:id path. The second route will not cause any problems, but it will never get called because the first route ends the request-response cycle. This example shows a middleware sub-stack that handles GET requests to the /user/:id path. app.get('/user/:id', (req, res, next) = { console.log('ID:', req.params.id) next() }, (req, res, next) = { res.send('User Info') }) // handler for the /user/:id path, which prints the user ID app.get('/user/:id', (req, res, next) = { res.send(req.params.id) }) To skip the rest of the middleware functions from a router middleware stack, call next('route') to pass control to the next route. Note next('route') will work only in middleware functions that were loaded by using the app.METHOD() or router.METHOD() functions. This example shows a middleware sub-stack that handles GET requests to the /user/:id path. app.get('/user/:id', (req, res, next) = { // if the user ID is 0, skip to the next route if (req.params.id === '0') next('route') // otherwise pass the control to the next middleware function in this stack else next() }, (req, res, next) = { // send a regular response res.send('regular') }) // handler for the /user/:id path, which sends a special response app.get('/user/:id', (req, res, next) = { res.send('special') }) Middleware can also be declared in an array for reusability. This example shows an array with a middleware sub-stack that handles GET requests to the /user/:id path function logOriginalUrl (req, res, next) { console.log('Request URL:', req.originalUrl) next() } function logMethod (req, res, next) { console.log('Request Type:', req.method) next() } const logStuff = [logOriginalUrl, logMethod] app.get('/user/:id', logStuff, (req, res, next) = { res.send('User Info') }) Router-level middleware Router-level middleware works in the same way as application-level middleware, except it is bound to an instance of express.Router(). const router = express.Router() Load router-level middleware by using the router.use() and router.METHOD() functions. The following example code replicates the middleware system that is shown above for application-level middleware, by using router-level middleware: const express = require('express') const app = express() const router = express.Router() // a middleware function with no mount path. This code is executed for every request to the router router.use((req, res, next) = { console.log('Time:', Date.now()) next() }) // a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path router.use('/user/:id', (req, res, next) = { console.log('Request URL:', req.originalUrl) next() }, (req, res, next) = { console.log('Request Type:', req.method) next() }) // a middleware sub-stack that handles GET requests to the /user/:id path router.get('/user/:id', (req, res, next) = { // if the user ID is 0, skip to the next router if (req.params.id === '0') next('route') // otherwise pass control to the next middleware function in this stack else next() }, (req, res, next) = { // render a regular page res.render('regular') }) // handler for the /user/:id path, which renders a special page router.get('/user/:id', (req, res, next) = { console.log(req.params.id) res.render('special') }) // mount the router on the app app.use('/', router) To skip the rest of the routers middleware functions, call next('router') to pass control back out of the router instance. This example shows a middleware sub-stack that handles GET requests to the /user/:id path. const express = require('express') const app = express() const router = express.Router() // predicate the router with a check and bail out when needed router.use((req, res, next) = { if (!req.headers['x-auth']) return next('router') next() }) router.get('/user/:id', (req, res) = { res.send('hello, user!') }) // use the router and 401 anything falling through app.use('/admin', router, (req, res) = { res.sendStatus(401) }) Error-handling middleware Error-handling middleware always takes four arguments. You must provide four arguments to identify it as an error-handling middleware function. Even if you dont need to use the next object, you must specify it to maintain the signature. Otherwise, the next object will be interpreted as regular middleware and will fail to handle errors. Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the signature (err, req, res, next): app.use((err, req, res, next) = { console.error(err.stack) res.status(500).send('Something broke!') }) For details about error-handling middleware, see: Error handling. Built-in middleware Starting with version 4.x, Express no longer depends on Connect. The middleware functions that were previously included with Express are now in separate modules; see the list of middleware functions. Express has the following built-in middleware functions: express.static serves static assets such as HTML files, images, and so on. express.json parses incoming requests with JSON payloads. NOTE: Available with Express 4.16.0+ express.urlencoded parses incoming requests with URL-encoded payloads. NOTE: Available with Express 4.16.0+ Third-party middleware Use third-party middleware to add functionality to Express apps. Install the Node.js module for the required functionality, then load it in your app at the application level or at the router level. The following example illustrates installing and loading the cookie-parsing middleware function cookie-parser.  npm install cookie-parser const express = require('express') const app = express() const cookieParser = require('cookie-parser') // load the cookie-parsing middleware app.use(cookieParser()) For a partial list of third-party middleware functions that are commonly used with Express, see: Third-party middleware. Edit this page",
+      "code_blocks": [
+        "app.METHOD()",
+        "const express = require('express')\nconst app = express()\n\napp.use((req, res, next) => {\n  console.log('Time:', Date.now())\n  next()\n})",
+        "const express = require('express')\nconst app = express()\n\napp.use((req, res, next) => {\n  console.log('Time:', Date.now())\n  next()\n})",
+        "app.use('/user/:id', (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})",
+        "app.use('/user/:id', (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})",
+        "app.get('/user/:id', (req, res, next) => {\n  res.send('USER')\n})",
+        "app.get('/user/:id', (req, res, next) => {\n  res.send('USER')\n})",
+        "app.use('/user/:id', (req, res, next) => {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}, (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})",
+        "app.use('/user/:id', (req, res, next) => {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}, (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})",
+        "app.get('/user/:id', (req, res, next) => {\n  console.log('ID:', req.params.id)\n  next()\n}, (req, res, next) => {\n  res.send('User Info')\n})\n\n// handler for the /user/:id path, which prints the user ID\napp.get('/user/:id', (req, res, next) => {\n  res.send(req.params.id)\n})",
+        "app.get('/user/:id', (req, res, next) => {\n  console.log('ID:', req.params.id)\n  next()\n}, (req, res, next) => {\n  res.send('User Info')\n})\n\n// handler for the /user/:id path, which prints the user ID\napp.get('/user/:id', (req, res, next) => {\n  res.send(req.params.id)\n})",
+        "next('route')",
+        "next('route')",
+        "app.METHOD()",
+        "router.METHOD()",
+        "app.get('/user/:id', (req, res, next) => {\n  // if the user ID is 0, skip to the next route\n  if (req.params.id === '0') next('route')\n  // otherwise pass the control to the next middleware function in this stack\n  else next()\n}, (req, res, next) => {\n  // send a regular response\n  res.send('regular')\n})\n\n// handler for the /user/:id path, which sends a special response\napp.get('/user/:id', (req, res, next) => {\n  res.send('special')\n})",
+        "app.get('/user/:id', (req, res, next) => {\n  // if the user ID is 0, skip to the next route\n  if (req.params.id === '0') next('route')\n  // otherwise pass the control to the next middleware function in this stack\n  else next()\n}, (req, res, next) => {\n  // send a regular response\n  res.send('regular')\n})\n\n// handler for the /user/:id path, which sends a special response\napp.get('/user/:id', (req, res, next) => {\n  res.send('special')\n})",
+        "function logOriginalUrl (req, res, next) {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}\n\nfunction logMethod (req, res, next) {\n  console.log('Request Type:', req.method)\n  next()\n}\n\nconst logStuff = [logOriginalUrl, logMethod]\napp.get('/user/:id', logStuff, (req, res, next) => {\n  res.send('User Info')\n})",
+        "function logOriginalUrl (req, res, next) {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}\n\nfunction logMethod (req, res, next) {\n  console.log('Request Type:', req.method)\n  next()\n}\n\nconst logStuff = [logOriginalUrl, logMethod]\napp.get('/user/:id', logStuff, (req, res, next) => {\n  res.send('User Info')\n})",
+        "express.Router()",
+        "const router = express.Router()",
+        "const router = express.Router()",
+        "router.use()",
+        "router.METHOD()",
+        "const express = require('express')\nconst app = express()\nconst router = express.Router()\n\n// a middleware function with no mount path. This code is executed for every request to the router\nrouter.use((req, res, next) => {\n  console.log('Time:', Date.now())\n  next()\n})\n\n// a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path\nrouter.use('/user/:id', (req, res, next) => {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}, (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})\n\n// a middleware sub-stack that handles GET requests to the /user/:id path\nrouter.get('/user/:id', (req, res, next) => {\n  // if the user ID is 0, skip to the next router\n  if (req.params.id === '0') next('route')\n  // otherwise pass control to the next middleware function in this stack\n  else next()\n}, (req, res, next) => {\n  // render a regular page\n  res.render('regular')\n})\n\n// handler for the /user/:id path, which renders a special page\nrouter.get('/user/:id', (req, res, next) => {\n  console.log(req.params.id)\n  res.render('special')\n})\n\n// mount the router on the app\napp.use('/', router)",
+        "const express = require('express')\nconst app = express()\nconst router = express.Router()\n\n// a middleware function with no mount path. This code is executed for every request to the router\nrouter.use((req, res, next) => {\n  console.log('Time:', Date.now())\n  next()\n})\n\n// a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path\nrouter.use('/user/:id', (req, res, next) => {\n  console.log('Request URL:', req.originalUrl)\n  next()\n}, (req, res, next) => {\n  console.log('Request Type:', req.method)\n  next()\n})\n\n// a middleware sub-stack that handles GET requests to the /user/:id path\nrouter.get('/user/:id', (req, res, next) => {\n  // if the user ID is 0, skip to the next router\n  if (req.params.id === '0') next('route')\n  // otherwise pass control to the next middleware function in this stack\n  else next()\n}, (req, res, next) => {\n  // render a regular page\n  res.render('regular')\n})\n\n// handler for the /user/:id path, which renders a special page\nrouter.get('/user/:id', (req, res, next) => {\n  console.log(req.params.id)\n  res.render('special')\n})\n\n// mount the router on the app\napp.use('/', router)",
+        "next('router')",
+        "const express = require('express')\nconst app = express()\nconst router = express.Router()\n\n// predicate the router with a check and bail out when needed\nrouter.use((req, res, next) => {\n  if (!req.headers['x-auth']) return next('router')\n  next()\n})\n\nrouter.get('/user/:id', (req, res) => {\n  res.send('hello, user!')\n})\n\n// use the router and 401 anything falling through\napp.use('/admin', router, (req, res) => {\n  res.sendStatus(401)\n})",
+        "const express = require('express')\nconst app = express()\nconst router = express.Router()\n\n// predicate the router with a check and bail out when needed\nrouter.use((req, res, next) => {\n  if (!req.headers['x-auth']) return next('router')\n  next()\n})\n\nrouter.get('/user/:id', (req, res) => {\n  res.send('hello, user!')\n})\n\n// use the router and 401 anything falling through\napp.use('/admin', router, (req, res) => {\n  res.sendStatus(401)\n})",
+        "(err, req, res, next)",
+        "app.use((err, req, res, next) => {\n  console.error(err.stack)\n  res.status(500).send('Something broke!')\n})",
+        "app.use((err, req, res, next) => {\n  console.error(err.stack)\n  res.status(500).send('Something broke!')\n})",
+        "cookie-parser",
+        "$ npm install cookie-parser",
+        "$ npm install cookie-parser",
+        "const express = require('express')\nconst app = express()\nconst cookieParser = require('cookie-parser')\n\n// load the cookie-parsing middleware\napp.use(cookieParser())",
+        "const express = require('express')\nconst app = express()\nconst cookieParser = require('cookie-parser')\n\n// load the cookie-parsing middleware\napp.use(cookieParser())"
+      ],
+      "chunks": [
+        {
+          "content": "Using middleware Express is a routing and middleware web framework that has minimal functionality of its own: An Express application is essentially a series of middleware function calls Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the applications request-response cycle The next middleware function is commonly denoted by a variable named next",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "Middleware functions can perform the following tasks: Execute any code Make changes to the request and the response objects End the request-response cycle Call the next middleware function in the stack If the current middleware function does not end the request-response cycle, it must call next() to pass control to the next middleware function Otherwise, the request will be left hanging",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "An Express application can use the following types of middleware: Application-level middleware Router-level middleware Error-handling middleware Built-in middleware Third-party middleware You can load application-level and router-level middleware with an optional mount path You can also load a series of middleware functions together, which creates a sub-stack of the middleware system at a mount point",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "Application-level middleware Bind application-level middleware to an instance of the app object by using the app use() and app METHOD() functions, where METHOD is the HTTP method of the request that the middleware function handles (such as GET, PUT, or POST) in lowercase This example shows a middleware function with no mount path The function is executed every time the app receives a request const express = require('express') const app = express() app use((req, res, next) = { console",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "log('Time:', Date now()) next() }) This example shows a middleware function mounted on the /user/:id path The function is executed for any type of HTTP request on the /user/:id path app use('/user/:id', (req, res, next) = { console log('Request Type:', req method) next() }) This example shows a route and its handler function (middleware system) The function handles GET requests to the /user/:id path app get('/user/:id', (req, res, next) = { res",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "send('USER') }) Here is an example of loading a series of middleware functions at a mount point, with a mount path It illustrates a middleware sub-stack that prints request info for any type of HTTP request to the /user/:id path app use('/user/:id', (req, res, next) = { console log('Request URL:', req originalUrl) next() }, (req, res, next) = { console log('Request Type:', req method) next() }) Route handlers enable you to define multiple routes for a path",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "The example below defines two routes for GET requests to the /user/:id path The second route will not cause any problems, but it will never get called because the first route ends the request-response cycle This example shows a middleware sub-stack that handles GET requests to the /user/:id path app get('/user/:id', (req, res, next) = { console log('ID:', req params id) next() }, (req, res, next) = { res send('User Info') }) // handler for the /user/:id path, which prints the user ID app",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "get('/user/:id', (req, res, next) = { res send(req params id) }) To skip the rest of the middleware functions from a router middleware stack, call next('route') to pass control to the next route Note next('route') will work only in middleware functions that were loaded by using the app METHOD() or router METHOD() functions This example shows a middleware sub-stack that handles GET requests to the /user/:id path app",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "get('/user/:id', (req, res, next) = { // if the user ID is 0, skip to the next route if (req params id === '0') next('route') // otherwise pass the control to the next middleware function in this stack else next() }, (req, res, next) = { // send a regular response res send('regular') }) // handler for the /user/:id path, which sends a special response app get('/user/:id', (req, res, next) = { res send('special') }) Middleware can also be declared in an array for reusability",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        },
+        {
+          "content": "This example shows an array with a middleware sub-stack that handles GET requests to the /user/:id path function logOriginalUrl (req, res, next) { console log('Request URL:', req originalUrl) next() } function logMethod (req, res, next) { console log('Request Type:', req method) next() } const logStuff = [logOriginalUrl, logMethod] app get('/user/:id', logStuff, (req, res, next) = { res",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_9"
+        },
+        {
+          "content": "send('User Info') }) Router-level middleware Router-level middleware works in the same way as application-level middleware, except it is bound to an instance of express Router() const router = express Router() Load router-level middleware by using the router use() and router METHOD() functions",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_10"
+        },
+        {
+          "content": "The following example code replicates the middleware system that is shown above for application-level middleware, by using router-level middleware: const express = require('express') const app = express() const router = express Router() // a middleware function with no mount path This code is executed for every request to the router router use((req, res, next) = { console log('Time:', Date",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_11"
+        },
+        {
+          "content": "now()) next() }) // a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path router use('/user/:id', (req, res, next) = { console log('Request URL:', req originalUrl) next() }, (req, res, next) = { console log('Request Type:', req method) next() }) // a middleware sub-stack that handles GET requests to the /user/:id path router get('/user/:id', (req, res, next) = { // if the user ID is 0, skip to the next router if (req params",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_12"
+        },
+        {
+          "content": "id === '0') next('route') // otherwise pass control to the next middleware function in this stack else next() }, (req, res, next) = { // render a regular page res render('regular') }) // handler for the /user/:id path, which renders a special page router get('/user/:id', (req, res, next) = { console log(req params id) res render('special') }) // mount the router on the app app",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_13"
+        },
+        {
+          "content": "use('/', router) To skip the rest of the routers middleware functions, call next('router') to pass control back out of the router instance This example shows a middleware sub-stack that handles GET requests to the /user/:id path const express = require('express') const app = express() const router = express Router() // predicate the router with a check and bail out when needed router use((req, res, next) = { if ( req headers['x-auth']) return next('router') next() }) router",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_14"
+        },
+        {
+          "content": "get('/user/:id', (req, res) = { res send('hello, user ') }) // use the router and 401 anything falling through app use('/admin', router, (req, res) = { res sendStatus(401) }) Error-handling middleware Error-handling middleware always takes four arguments You must provide four arguments to identify it as an error-handling middleware function Even if you dont need to use the next object, you must specify it to maintain the signature",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_15"
+        },
+        {
+          "content": "Otherwise, the next object will be interpreted as regular middleware and will fail to handle errors Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the signature (err, req, res, next): app use((err, req, res, next) = { console error(err stack) res status(500) send('Something broke ') }) For details about error-handling middleware, see: Error handling Built-in middleware Starting with version 4",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_16"
+        },
+        {
+          "content": "x, Express no longer depends on Connect The middleware functions that were previously included with Express are now in separate modules; see the list of middleware functions Express has the following built-in middleware functions: express static serves static assets such as HTML files, images, and so on express json parses incoming requests with JSON payloads NOTE: Available with Express 4 16 0+ express urlencoded parses incoming requests with URL-encoded payloads NOTE: Available with Express 4",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_17"
+        },
+        {
+          "content": "16 0+ Third-party middleware Use third-party middleware to add functionality to Express apps Install the Node js module for the required functionality, then load it in your app at the application level or at the router level The following example illustrates installing and loading the cookie-parsing middleware function cookie-parser",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_18"
+        },
+        {
+          "content": "npm install cookie-parser const express = require('express') const app = express() const cookieParser = require('cookie-parser') // load the cookie-parsing middleware app use(cookieParser()) For a partial list of third-party middleware functions that are commonly used with Express, see: Third-party middleware Edit this page",
+          "url": "https://expressjs.com/en/guide/using-middleware.html",
+          "library": "express",
+          "chunk_id": "express_19"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+      "title": "Overriding the Express API",
+      "content": "Overriding the Express API The Express API consists of various methods and properties on the request and response objects. These are inherited by prototype. There are two extension points for the Express API: The global prototypes at express.request and express.response. App-specific prototypes at app.request and app.response. Altering the global prototypes will affect all loaded Express apps in the same process. If desired, alterations can be made app-specific by only altering the app-specific prototypes after creating a new app. Methods You can override the signature and behavior of existing methods with your own, by assigning a custom function. Following is an example of overriding the behavior of res.sendStatus. app.response.sendStatus = function (statusCode, type, message) { // code is intentionally kept simple for demonstration purpose return this.contentType(type) .status(statusCode) .send(message) } The above implementation completely changes the original signature of res.sendStatus. It now accepts a status code, encoding type, and the message to be sent to the client. The overridden method may now be used this way: res.sendStatus(404, 'application/json', '{\"error\":\"resource not found\"}') Properties Properties in the Express API are either: Assigned properties (ex: req.baseUrl, req.originalUrl) Defined as getters (ex: req.secure, req.ip) Since properties under category 1 are dynamically assigned on the request and response objects in the context of the current request-response cycle, their behavior cannot be overridden. Properties under category 2 can be overwritten using the Express API extensions API. The following code rewrites how the value of req.ip is to be derived. Now, it simply returns the value of the Client-IP request header. Object.defineProperty(app.request, 'ip', { configurable: true, enumerable: true, get () { return this.get('Client-IP') } }) Prototype In order to provide the Express API, the request/response objects passed to Express (via app(req, res), for example) need to inherit from the same prototype chain. By default, this is http.IncomingRequest.prototype for the request and http.ServerResponse.prototype for the response. Unless necessary, it is recommended that this be done only at the application level, rather than globally. Also, take care that the prototype that is being used matches the functionality as closely as possible to the default prototypes. // Use FakeRequest and FakeResponse in place of http.IncomingRequest and http.ServerResponse // for the given app reference Object.setPrototypeOf(Object.getPrototypeOf(app.request), FakeRequest.prototype) Object.setPrototypeOf(Object.getPrototypeOf(app.response), FakeResponse.prototype) Edit this page",
+      "code_blocks": [
+        "express.request",
+        "express.response",
+        "app.request",
+        "app.response",
+        "app.response.sendStatus = function (statusCode, type, message) {\n  // code is intentionally kept simple for demonstration purpose\n  return this.contentType(type)\n    .status(statusCode)\n    .send(message)\n}",
+        "app.response.sendStatus = function (statusCode, type, message) {\n  // code is intentionally kept simple for demonstration purpose\n  return this.contentType(type)\n    .status(statusCode)\n    .send(message)\n}",
+        "res.sendStatus",
+        "res.sendStatus(404, 'application/json', '{\"error\":\"resource not found\"}')",
+        "res.sendStatus(404, 'application/json', '{\"error\":\"resource not found\"}')",
+        "req.baseUrl",
+        "req.originalUrl",
+        "Object.defineProperty(app.request, 'ip', {\n  configurable: true,\n  enumerable: true,\n  get () { return this.get('Client-IP') }\n})",
+        "Object.defineProperty(app.request, 'ip', {\n  configurable: true,\n  enumerable: true,\n  get () { return this.get('Client-IP') }\n})",
+        "app(req, res)",
+        "http.IncomingRequest.prototype",
+        "http.ServerResponse.prototype",
+        "// Use FakeRequest and FakeResponse in place of http.IncomingRequest and http.ServerResponse\n// for the given app reference\nObject.setPrototypeOf(Object.getPrototypeOf(app.request), FakeRequest.prototype)\nObject.setPrototypeOf(Object.getPrototypeOf(app.response), FakeResponse.prototype)",
+        "// Use FakeRequest and FakeResponse in place of http.IncomingRequest and http.ServerResponse\n// for the given app reference\nObject.setPrototypeOf(Object.getPrototypeOf(app.request), FakeRequest.prototype)\nObject.setPrototypeOf(Object.getPrototypeOf(app.response), FakeResponse.prototype)"
+      ],
+      "chunks": [
+        {
+          "content": "Overriding the Express API The Express API consists of various methods and properties on the request and response objects These are inherited by prototype There are two extension points for the Express API: The global prototypes at express request and express response App-specific prototypes at app request and app response Altering the global prototypes will affect all loaded Express apps in the same process",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "If desired, alterations can be made app-specific by only altering the app-specific prototypes after creating a new app Methods You can override the signature and behavior of existing methods with your own, by assigning a custom function Following is an example of overriding the behavior of res sendStatus app response sendStatus = function (statusCode, type, message) { // code is intentionally kept simple for demonstration purpose return this contentType(type) status(statusCode)",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "send(message) } The above implementation completely changes the original signature of res sendStatus It now accepts a status code, encoding type, and the message to be sent to the client The overridden method may now be used this way: res sendStatus(404, 'application/json', '{\"error\":\"resource not found\"}') Properties Properties in the Express API are either: Assigned properties (ex: req baseUrl, req originalUrl) Defined as getters (ex: req secure, req",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "ip) Since properties under category 1 are dynamically assigned on the request and response objects in the context of the current request-response cycle, their behavior cannot be overridden Properties under category 2 can be overwritten using the Express API extensions API The following code rewrites how the value of req ip is to be derived Now, it simply returns the value of the Client-IP request header Object defineProperty(app",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "request, 'ip', { configurable: true, enumerable: true, get () { return this get('Client-IP') } }) Prototype In order to provide the Express API, the request/response objects passed to Express (via app(req, res), for example) need to inherit from the same prototype chain By default, this is http IncomingRequest prototype for the request and http ServerResponse prototype for the response Unless necessary, it is recommended that this be done only at the application level, rather than globally",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "Also, take care that the prototype that is being used matches the functionality as closely as possible to the default prototypes // Use FakeRequest and FakeResponse in place of http IncomingRequest and http ServerResponse // for the given app reference Object setPrototypeOf(Object getPrototypeOf(app request), FakeRequest prototype) Object setPrototypeOf(Object getPrototypeOf(app response), FakeResponse prototype) Edit this page",
+          "url": "https://expressjs.com/en/guide/overriding-express-api.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/using-template-engines.html",
+      "title": "Using template engines with Express",
+      "content": "Using template engines with Express A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client. This approach makes it easier to design an HTML page. The Express application generator uses Pug as its default, but it also supports Handlebars, and EJS, among others. To render template files, set the following application setting properties, in the default app.js created by the generator: views, the directory where the template files are located. Eg: app.set('views', './views'). This defaults to the views directory in the application root directory. view engine, the template engine to use. For example, to use the Pug template engine: app.set('view engine', 'pug'). Then install the corresponding template engine npm package; for example to install Pug:  npm install pug --save Express-compliant template engines such as Pug export a function named __express(filePath, options, callback), which res.render() calls to render the template code. Some template engines do not follow this convention. The ladjs/consolidate library follows this convention by mapping all of the popular Node.js template engines, and therefore works seamlessly within Express. After the view engine is set, you dont have to specify the engine or load the template engine module in your app; Express loads the module internally, for example: app.set('view engine', 'pug') Then, create a Pug template file named index.pug in the views directory, with the following content: html head title= title body h1= message Create a route to render the index.pug file. If the view engine property is not set, you must specify the extension of the view file. Otherwise, you can omit it. app.get('/', (req, res) = { res.render('index', { title: 'Hey', message: 'Hello there!' }) }) When you make a request to the home page, the index.pug file will be rendered as HTML. The view engine cache does not cache the contents of the templates output, only the underlying template itself. The view is still re-rendered with every request even when the cache is on. Edit this page",
+      "code_blocks": [
+        "app.set('views', './views')",
+        "view engine",
+        "app.set('view engine', 'pug')",
+        "$ npm install pug --save",
+        "$ npm install pug --save",
+        "__express(filePath, options, callback)",
+        "res.render()",
+        "app.set('view engine', 'pug')",
+        "app.set('view engine', 'pug')",
+        "html\n  head\n    title= title\n  body\n    h1= message",
+        "html\n  head\n    title= title\n  body\n    h1= message",
+        "view engine",
+        "app.get('/', (req, res) => {\n  res.render('index', { title: 'Hey', message: 'Hello there!' })\n})",
+        "app.get('/', (req, res) => {\n  res.render('index', { title: 'Hey', message: 'Hello there!' })\n})"
+      ],
+      "chunks": [
+        {
+          "content": "Using template engines with Express A template engine enables you to use static template files in your application At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client This approach makes it easier to design an HTML page The Express application generator uses Pug as its default, but it also supports Handlebars, and EJS, among others",
+          "url": "https://expressjs.com/en/guide/using-template-engines.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "To render template files, set the following application setting properties, in the default app js created by the generator: views, the directory where the template files are located Eg: app set('views', ' /views') This defaults to the views directory in the application root directory view engine, the template engine to use For example, to use the Pug template engine: app set('view engine', 'pug')",
+          "url": "https://expressjs.com/en/guide/using-template-engines.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "Then install the corresponding template engine npm package; for example to install Pug:  npm install pug --save Express-compliant template engines such as Pug export a function named __express(filePath, options, callback), which res render() calls to render the template code Some template engines do not follow this convention The ladjs/consolidate library follows this convention by mapping all of the popular Node js template engines, and therefore works seamlessly within Express",
+          "url": "https://expressjs.com/en/guide/using-template-engines.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "After the view engine is set, you dont have to specify the engine or load the template engine module in your app; Express loads the module internally, for example: app set('view engine', 'pug') Then, create a Pug template file named index pug in the views directory, with the following content: html head title= title body h1= message Create a route to render the index pug file If the view engine property is not set, you must specify the extension of the view file Otherwise, you can omit it app",
+          "url": "https://expressjs.com/en/guide/using-template-engines.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "get('/', (req, res) = { res render('index', { title: 'Hey', message: 'Hello there ' }) }) When you make a request to the home page, the index pug file will be rendered as HTML The view engine cache does not cache the contents of the templates output, only the underlying template itself The view is still re-rendered with every request even when the cache is on Edit this page",
+          "url": "https://expressjs.com/en/guide/using-template-engines.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/error-handling.html",
+      "title": "Express error handling",
+      "content": "Error Handling Error Handling refers to how Express catches and processes errors that occur both synchronously and asynchronously. Express comes with a default error handler so you dont need to write your own to get started. Catching Errors Its important to ensure that Express catches all errors that occur while running route handlers and middleware. Errors that occur in synchronous code inside route handlers and middleware require no extra work. If synchronous code throws an error, then Express will catch and process it. For example: app.get('/', (req, res) = { throw new Error('BROKEN') // Express will catch this on its own. }) For errors returned from asynchronous functions invoked by route handlers and middleware, you must pass them to the next() function, where Express will catch and process them. For example: app.get('/', (req, res, next) = { fs.readFile('/file-does-not-exist', (err, data) = { if (err) { next(err) // Pass errors to Express. } else { res.send(data) } }) }) Starting with Express 5, route handlers and middleware that return a Promise will call next(value) automatically when they reject or throw an error. For example: app.get('/user/:id', async (req, res, next) = { const user = await getUserById(req.params.id) res.send(user) }) If getUserById throws an error or rejects, next will be called with either the thrown error or the rejected value. If no rejected value is provided, next will be called with a default Error object provided by the Express router. If you pass anything to the next() function (except the string 'route'), Express regards the current request as being an error and will skip any remaining non-error handling routing and middleware functions. If the callback in a sequence provides no data, only errors, you can simplify this code as follows: app.get('/', [ function (req, res, next) { fs.writeFile('/inaccessible-path', 'data', next) }, function (req, res) { res.send('OK') } ]) In the above example, next is provided as the callback for fs.writeFile, which is called with or without errors. If there is no error, the second handler is executed, otherwise Express catches and processes the error. You must catch errors that occur in asynchronous code invoked by route handlers or middleware and pass them to Express for processing. For example: app.get('/', (req, res, next) = { setTimeout(() = { try { throw new Error('BROKEN') } catch (err) { next(err) } }, 100) }) The above example uses a try...catch block to catch errors in the asynchronous code and pass them to Express. If the try...catch block were omitted, Express would not catch the error since it is not part of the synchronous handler code. Use promises to avoid the overhead of the try...catch block or when using functions that return promises. For example: app.get('/', (req, res, next) = { Promise.resolve().then(() = { throw new Error('BROKEN') }).catch(next) // Errors will be passed to Express. }) Since promises automatically catch both synchronous errors and rejected promises, you can simply provide next as the final catch handler and Express will catch errors, because the catch handler is given the error as the first argument. You could also use a chain of handlers to rely on synchronous error catching, by reducing the asynchronous code to something trivial. For example: app.get('/', [ function (req, res, next) { fs.readFile('/maybe-valid-file', 'utf-8', (err, data) = { res.locals.data = data next(err) }) }, function (req, res) { res.locals.data = res.locals.data.split(',')[1] res.send(res.locals.data) } ]) The above example has a couple of trivial statements from the readFile call. If readFile causes an error, then it passes the error to Express, otherwise you quickly return to the world of synchronous error handling in the next handler in the chain. Then, the example above tries to process the data. If this fails, then the synchronous error handler will catch it. If you had done this processing inside the readFile callback, then the application might exit and the Express error handlers would not run. Whichever method you use, if you want Express error handlers to be called in and the application to survive, you must ensure that Express receives the error. The default error handler Express comes with a built-in error handler that takes care of any errors that might be encountered in the app. This default error-handling middleware function is added at the end of the middleware function stack. If you pass an error to next() and you do not handle it in a custom error handler, it will be handled by the built-in error handler; the error will be written to the client with the stack trace. The stack trace is not included in the production environment. Set the environment variable NODE_ENV to production, to run the app in production mode. When an error is written, the following information is added to the response: The res.statusCode is set from err.status (or err.statusCode). If this value is outside the 4xx or 5xx range, it will be set to 500. The res.statusMessage is set according to the status code. The body will be the HTML of the status code message when in production environment, otherwise will be err.stack. Any headers specified in an err.headers object. If you call next() with an error after you have started writing the response (for example, if you encounter an error while streaming the response to the client), the Express default error handler closes the connection and fails the request. So when you add a custom error handler, you must delegate to the default Express error handler, when the headers have already been sent to the client: function errorHandler (err, req, res, next) { if (res.headersSent) { return next(err) } res.status(500) res.render('error', { error: err }) } Note that the default error handler can get triggered if you call next() with an error in your code more than once, even if custom error handling middleware is in place. Other error handling middleware can be found at Express middleware. Writing error handlers Define error-handling middleware functions in the same way as other middleware functions, except error-handling functions have four arguments instead of three: (err, req, res, next). For example: app.use((err, req, res, next) = { console.error(err.stack) res.status(500).send('Something broke!') }) You define error-handling middleware last, after other app.use() and routes calls; for example: const bodyParser = require('body-parser') const methodOverride = require('method-override') app.use(bodyParser.urlencoded({ extended: true })) app.use(bodyParser.json()) app.use(methodOverride()) app.use((err, req, res, next) = { // logic }) Responses from within a middleware function can be in any format, such as an HTML error page, a simple message, or a JSON string. For organizational (and higher-level framework) purposes, you can define several error-handling middleware functions, much as you would with regular middleware functions. For example, to define an error-handler for requests made by using XHR and those without: const bodyParser = require('body-parser') const methodOverride = require('method-override') app.use(bodyParser.urlencoded({ extended: true })) app.use(bodyParser.json()) app.use(methodOverride()) app.use(logErrors) app.use(clientErrorHandler) app.use(errorHandler) In this example, the generic logErrors might write request and error information to stderr, for example: function logErrors (err, req, res, next) { console.error(err.stack) next(err) } Also in this example, clientErrorHandler is defined as follows; in this case, the error is explicitly passed along to the next one. Notice that when not calling next in an error-handling function, you are responsible for writing (and ending) the response. Otherwise, those requests will hang and will not be eligible for garbage collection. function clientErrorHandler (err, req, res, next) { if (req.xhr) { res.status(500).send({ error: 'Something failed!' }) } else { next(err) } } Implement the catch-all errorHandler function as follows (for example): function errorHandler (err, req, res, next) { res.status(500) res.render('error', { error: err }) } If you have a route handler with multiple callback functions, you can use the route parameter to skip to the next route handler. For example: app.get('/a_route_behind_paywall', (req, res, next) = { if (!req.user.hasPaid) { // continue handling this request next('route') } else { next() } }, (req, res, next) = { PaidContent.find((err, doc) = { if (err) return next(err) res.json(doc) }) }) In this example, the getPaidContent handler will be skipped but any remaining handlers in app for /a_route_behind_paywall would continue to be executed. Calls to next() and next(err) indicate that the current handler is complete and in what state. next(err) will skip all remaining handlers in the chain except for those that are set up to handle errors as described above. Edit this page",
+      "code_blocks": [
+        "app.get('/', (req, res) => {\n  throw new Error('BROKEN') // Express will catch this on its own.\n})",
+        "app.get('/', (req, res) => {\n  throw new Error('BROKEN') // Express will catch this on its own.\n})",
+        "app.get('/', (req, res, next) => {\n  fs.readFile('/file-does-not-exist', (err, data) => {\n    if (err) {\n      next(err) // Pass errors to Express.\n    } else {\n      res.send(data)\n    }\n  })\n})",
+        "app.get('/', (req, res, next) => {\n  fs.readFile('/file-does-not-exist', (err, data) => {\n    if (err) {\n      next(err) // Pass errors to Express.\n    } else {\n      res.send(data)\n    }\n  })\n})",
+        "next(value)",
+        "app.get('/user/:id', async (req, res, next) => {\n  const user = await getUserById(req.params.id)\n  res.send(user)\n})",
+        "app.get('/user/:id', async (req, res, next) => {\n  const user = await getUserById(req.params.id)\n  res.send(user)\n})",
+        "getUserById",
+        "app.get('/', [\n  function (req, res, next) {\n    fs.writeFile('/inaccessible-path', 'data', next)\n  },\n  function (req, res) {\n    res.send('OK')\n  }\n])",
+        "app.get('/', [\n  function (req, res, next) {\n    fs.writeFile('/inaccessible-path', 'data', next)\n  },\n  function (req, res) {\n    res.send('OK')\n  }\n])",
+        "fs.writeFile",
+        "app.get('/', (req, res, next) => {\n  setTimeout(() => {\n    try {\n      throw new Error('BROKEN')\n    } catch (err) {\n      next(err)\n    }\n  }, 100)\n})",
+        "app.get('/', (req, res, next) => {\n  setTimeout(() => {\n    try {\n      throw new Error('BROKEN')\n    } catch (err) {\n      next(err)\n    }\n  }, 100)\n})",
+        "try...catch",
+        "try...catch",
+        "try...catch",
+        "app.get('/', (req, res, next) => {\n  Promise.resolve().then(() => {\n    throw new Error('BROKEN')\n  }).catch(next) // Errors will be passed to Express.\n})",
+        "app.get('/', (req, res, next) => {\n  Promise.resolve().then(() => {\n    throw new Error('BROKEN')\n  }).catch(next) // Errors will be passed to Express.\n})",
+        "app.get('/', [\n  function (req, res, next) {\n    fs.readFile('/maybe-valid-file', 'utf-8', (err, data) => {\n      res.locals.data = data\n      next(err)\n    })\n  },\n  function (req, res) {\n    res.locals.data = res.locals.data.split(',')[1]\n    res.send(res.locals.data)\n  }\n])",
+        "app.get('/', [\n  function (req, res, next) {\n    fs.readFile('/maybe-valid-file', 'utf-8', (err, data) => {\n      res.locals.data = data\n      next(err)\n    })\n  },\n  function (req, res) {\n    res.locals.data = res.locals.data.split(',')[1]\n    res.send(res.locals.data)\n  }\n])",
+        "res.statusCode",
+        "err.statusCode",
+        "res.statusMessage",
+        "err.headers",
+        "function errorHandler (err, req, res, next) {\n  if (res.headersSent) {\n    return next(err)\n  }\n  res.status(500)\n  res.render('error', { error: err })\n}",
+        "function errorHandler (err, req, res, next) {\n  if (res.headersSent) {\n    return next(err)\n  }\n  res.status(500)\n  res.render('error', { error: err })\n}",
+        "(err, req, res, next)",
+        "app.use((err, req, res, next) => {\n  console.error(err.stack)\n  res.status(500).send('Something broke!')\n})",
+        "app.use((err, req, res, next) => {\n  console.error(err.stack)\n  res.status(500).send('Something broke!')\n})",
+        "const bodyParser = require('body-parser')\nconst methodOverride = require('method-override')\n\napp.use(bodyParser.urlencoded({\n  extended: true\n}))\napp.use(bodyParser.json())\napp.use(methodOverride())\napp.use((err, req, res, next) => {\n  // logic\n})",
+        "const bodyParser = require('body-parser')\nconst methodOverride = require('method-override')\n\napp.use(bodyParser.urlencoded({\n  extended: true\n}))\napp.use(bodyParser.json())\napp.use(methodOverride())\napp.use((err, req, res, next) => {\n  // logic\n})",
+        "const bodyParser = require('body-parser')\nconst methodOverride = require('method-override')\n\napp.use(bodyParser.urlencoded({\n  extended: true\n}))\napp.use(bodyParser.json())\napp.use(methodOverride())\napp.use(logErrors)\napp.use(clientErrorHandler)\napp.use(errorHandler)",
+        "const bodyParser = require('body-parser')\nconst methodOverride = require('method-override')\n\napp.use(bodyParser.urlencoded({\n  extended: true\n}))\napp.use(bodyParser.json())\napp.use(methodOverride())\napp.use(logErrors)\napp.use(clientErrorHandler)\napp.use(errorHandler)",
+        "function logErrors (err, req, res, next) {\n  console.error(err.stack)\n  next(err)\n}",
+        "function logErrors (err, req, res, next) {\n  console.error(err.stack)\n  next(err)\n}",
+        "clientErrorHandler",
+        "function clientErrorHandler (err, req, res, next) {\n  if (req.xhr) {\n    res.status(500).send({ error: 'Something failed!' })\n  } else {\n    next(err)\n  }\n}",
+        "function clientErrorHandler (err, req, res, next) {\n  if (req.xhr) {\n    res.status(500).send({ error: 'Something failed!' })\n  } else {\n    next(err)\n  }\n}",
+        "errorHandler",
+        "function errorHandler (err, req, res, next) {\n  res.status(500)\n  res.render('error', { error: err })\n}",
+        "function errorHandler (err, req, res, next) {\n  res.status(500)\n  res.render('error', { error: err })\n}",
+        "app.get('/a_route_behind_paywall',\n  (req, res, next) => {\n    if (!req.user.hasPaid) {\n      // continue handling this request\n      next('route')\n    } else {\n      next()\n    }\n  }, (req, res, next) => {\n    PaidContent.find((err, doc) => {\n      if (err) return next(err)\n      res.json(doc)\n    })\n  })",
+        "app.get('/a_route_behind_paywall',\n  (req, res, next) => {\n    if (!req.user.hasPaid) {\n      // continue handling this request\n      next('route')\n    } else {\n      next()\n    }\n  }, (req, res, next) => {\n    PaidContent.find((err, doc) => {\n      if (err) return next(err)\n      res.json(doc)\n    })\n  })",
+        "getPaidContent",
+        "/a_route_behind_paywall"
+      ],
+      "chunks": [
+        {
+          "content": "Error Handling Error Handling refers to how Express catches and processes errors that occur both synchronously and asynchronously Express comes with a default error handler so you dont need to write your own to get started Catching Errors Its important to ensure that Express catches all errors that occur while running route handlers and middleware Errors that occur in synchronous code inside route handlers and middleware require no extra work",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "If synchronous code throws an error, then Express will catch and process it For example: app get('/', (req, res) = { throw new Error('BROKEN') // Express will catch this on its own }) For errors returned from asynchronous functions invoked by route handlers and middleware, you must pass them to the next() function, where Express will catch and process them For example: app get('/', (req, res, next) = { fs",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "readFile('/file-does-not-exist', (err, data) = { if (err) { next(err) // Pass errors to Express } else { res send(data) } }) }) Starting with Express 5, route handlers and middleware that return a Promise will call next(value) automatically when they reject or throw an error For example: app get('/user/:id', async (req, res, next) = { const user = await getUserById(req params id) res",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "send(user) }) If getUserById throws an error or rejects, next will be called with either the thrown error or the rejected value If no rejected value is provided, next will be called with a default Error object provided by the Express router If you pass anything to the next() function (except the string 'route'), Express regards the current request as being an error and will skip any remaining non-error handling routing and middleware functions",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "If the callback in a sequence provides no data, only errors, you can simplify this code as follows: app get('/', [ function (req, res, next) { fs writeFile('/inaccessible-path', 'data', next) }, function (req, res) { res send('OK') } ]) In the above example, next is provided as the callback for fs writeFile, which is called with or without errors If there is no error, the second handler is executed, otherwise Express catches and processes the error",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "You must catch errors that occur in asynchronous code invoked by route handlers or middleware and pass them to Express for processing For example: app get('/', (req, res, next) = { setTimeout(() = { try { throw new Error('BROKEN') } catch (err) { next(err) } }, 100) }) The above example uses a try catch block to catch errors in the asynchronous code and pass them to Express If the try catch block were omitted, Express would not catch the error since it is not part of the synchronous handler code",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "Use promises to avoid the overhead of the try catch block or when using functions that return promises For example: app get('/', (req, res, next) = { Promise resolve() then(() = { throw new Error('BROKEN') }) catch(next) // Errors will be passed to Express }) Since promises automatically catch both synchronous errors and rejected promises, you can simply provide next as the final catch handler and Express will catch errors, because the catch handler is given the error as the first argument",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "You could also use a chain of handlers to rely on synchronous error catching, by reducing the asynchronous code to something trivial For example: app get('/', [ function (req, res, next) { fs readFile('/maybe-valid-file', 'utf-8', (err, data) = { res locals data = data next(err) }) }, function (req, res) { res locals data = res locals data split(',')[1] res send(res locals data) } ]) The above example has a couple of trivial statements from the readFile call",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "If readFile causes an error, then it passes the error to Express, otherwise you quickly return to the world of synchronous error handling in the next handler in the chain Then, the example above tries to process the data If this fails, then the synchronous error handler will catch it If you had done this processing inside the readFile callback, then the application might exit and the Express error handlers would not run",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        },
+        {
+          "content": "Whichever method you use, if you want Express error handlers to be called in and the application to survive, you must ensure that Express receives the error The default error handler Express comes with a built-in error handler that takes care of any errors that might be encountered in the app This default error-handling middleware function is added at the end of the middleware function stack",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_9"
+        },
+        {
+          "content": "If you pass an error to next() and you do not handle it in a custom error handler, it will be handled by the built-in error handler; the error will be written to the client with the stack trace The stack trace is not included in the production environment Set the environment variable NODE_ENV to production, to run the app in production mode When an error is written, the following information is added to the response: The res statusCode is set from err status (or err statusCode)",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_10"
+        },
+        {
+          "content": "If this value is outside the 4xx or 5xx range, it will be set to 500 The res statusMessage is set according to the status code The body will be the HTML of the status code message when in production environment, otherwise will be err stack Any headers specified in an err headers object",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_11"
+        },
+        {
+          "content": "If you call next() with an error after you have started writing the response (for example, if you encounter an error while streaming the response to the client), the Express default error handler closes the connection and fails the request So when you add a custom error handler, you must delegate to the default Express error handler, when the headers have already been sent to the client: function errorHandler (err, req, res, next) { if (res headersSent) { return next(err) } res status(500) res",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_12"
+        },
+        {
+          "content": "render('error', { error: err }) } Note that the default error handler can get triggered if you call next() with an error in your code more than once, even if custom error handling middleware is in place Other error handling middleware can be found at Express middleware Writing error handlers Define error-handling middleware functions in the same way as other middleware functions, except error-handling functions have four arguments instead of three: (err, req, res, next) For example: app",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_13"
+        },
+        {
+          "content": "use((err, req, res, next) = { console error(err stack) res status(500) send('Something broke ') }) You define error-handling middleware last, after other app use() and routes calls; for example: const bodyParser = require('body-parser') const methodOverride = require('method-override') app use(bodyParser urlencoded({ extended: true })) app use(bodyParser json()) app use(methodOverride()) app",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_14"
+        },
+        {
+          "content": "use((err, req, res, next) = { // logic }) Responses from within a middleware function can be in any format, such as an HTML error page, a simple message, or a JSON string For organizational (and higher-level framework) purposes, you can define several error-handling middleware functions, much as you would with regular middleware functions",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_15"
+        },
+        {
+          "content": "For example, to define an error-handler for requests made by using XHR and those without: const bodyParser = require('body-parser') const methodOverride = require('method-override') app use(bodyParser urlencoded({ extended: true })) app use(bodyParser json()) app use(methodOverride()) app use(logErrors) app use(clientErrorHandler) app",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_16"
+        },
+        {
+          "content": "use(errorHandler) In this example, the generic logErrors might write request and error information to stderr, for example: function logErrors (err, req, res, next) { console error(err stack) next(err) } Also in this example, clientErrorHandler is defined as follows; in this case, the error is explicitly passed along to the next one Notice that when not calling next in an error-handling function, you are responsible for writing (and ending) the response",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_17"
+        },
+        {
+          "content": "Otherwise, those requests will hang and will not be eligible for garbage collection function clientErrorHandler (err, req, res, next) { if (req xhr) { res status(500) send({ error: 'Something failed ' }) } else { next(err) } } Implement the catch-all errorHandler function as follows (for example): function errorHandler (err, req, res, next) { res status(500) res",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_18"
+        },
+        {
+          "content": "render('error', { error: err }) } If you have a route handler with multiple callback functions, you can use the route parameter to skip to the next route handler For example: app get('/a_route_behind_paywall', (req, res, next) = { if ( req user hasPaid) { // continue handling this request next('route') } else { next() } }, (req, res, next) = { PaidContent find((err, doc) = { if (err) return next(err) res",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_19"
+        },
+        {
+          "content": "json(doc) }) }) In this example, the getPaidContent handler will be skipped but any remaining handlers in app for /a_route_behind_paywall would continue to be executed Calls to next() and next(err) indicate that the current handler is complete and in what state next(err) will skip all remaining handlers in the chain except for those that are set up to handle errors as described above Edit this page",
+          "url": "https://expressjs.com/en/guide/error-handling.html",
+          "library": "express",
+          "chunk_id": "express_20"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/debugging.html",
+      "title": "Debugging Express",
+      "content": "Debugging Express To see all the internal logs used in Express, set the DEBUG environment variable to express:* when launching your app.  DEBUG=express:* node index.js On Windows, use the corresponding command.  env:DEBUG = \"express:*\"; node index.js Running this command on the default app generated by the express generator prints the following output:  DEBUG=express:* node ./bin/www express:router:route new / +0ms express:router:layer new / +1ms express:router:route get / +1ms express:router:layer new / +0ms express:router:route new / +1ms express:router:layer new / +0ms express:router:route get / +0ms express:router:layer new / +0ms express:application compile etag weak +1ms express:application compile query parser extended +0ms express:application compile trust proxy false +0ms express:application booting in development mode +1ms express:router use / query +0ms express:router:layer new / +0ms express:router use / expressInit +0ms express:router:layer new / +0ms express:router use / favicon +1ms express:router:layer new / +0ms express:router use / logger +0ms express:router:layer new / +0ms express:router use / jsonParser +0ms express:router:layer new / +1ms express:router use / urlencodedParser +0ms express:router:layer new / +0ms express:router use / cookieParser +0ms express:router:layer new / +0ms express:router use / stylus +90ms express:router:layer new / +0ms express:router use / serveStatic +0ms express:router:layer new / +0ms express:router use / router +0ms express:router:layer new / +1ms express:router use /users router +0ms express:router:layer new /users +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms When a request is then made to the app, you will see the logs specified in the Express code: express:router dispatching GET / +4h express:router query : / +2ms express:router expressInit : / +0ms express:router favicon : / +0ms express:router logger : / +1ms express:router jsonParser : / +0ms express:router urlencodedParser : / +1ms express:router cookieParser : / +0ms express:router stylus : / +0ms express:router serveStatic : / +2ms express:router router : / +2ms express:router dispatching GET / +1ms express:view lookup \"index.pug\" +338ms express:view stat \"/projects/example/views/index.pug\" +0ms express:view render \"/projects/example/views/index.pug\" +1ms To see the logs only from the router implementation, set the value of DEBUG to express:router. Likewise, to see logs only from the application implementation, set the value of DEBUG to express:application, and so on. Applications generated by express An application generated by the express command uses the debug module and its debug namespace is scoped to the name of the application. For example, if you generated the app with  express sample-app, you can enable the debug statements with the following command:  DEBUG=sample-app:* node ./bin/www You can specify more than one debug namespace by assigning a comma-separated list of names:  DEBUG=http,mail,express:* node index.js Advanced options When running through Node.js, you can set a few environment variables that will change the behavior of the debug logging: Name Purpose DEBUG Enables/disables specific debugging namespaces. DEBUG_COLORS Whether or not to use colors in the debug output. DEBUG_DEPTH Object inspection depth. DEBUG_FD File descriptor to write debug output to. DEBUG_SHOW_HIDDEN Shows hidden properties on inspected objects. Note The environment variables beginning with DEBUG_ end up being converted into an Options object that gets used with o/O formatters. See the Node.js documentation for util.inspect() for the complete list. Edit this page",
+      "code_blocks": [
+        "$ DEBUG=express:* node index.js",
+        "$ DEBUG=express:* node index.js",
+        "> $env:DEBUG = \"express:*\"; node index.js",
+        "> $env:DEBUG = \"express:*\"; node index.js",
+        "$ DEBUG=express:* node ./bin/www\n  express:router:route new / +0ms\n  express:router:layer new / +1ms\n  express:router:route get / +1ms\n  express:router:layer new / +0ms\n  express:router:route new / +1ms\n  express:router:layer new / +0ms\n  express:router:route get / +0ms\n  express:router:layer new / +0ms\n  express:application compile etag weak +1ms\n  express:application compile query parser extended +0ms\n  express:application compile trust proxy false +0ms\n  express:application booting in development mode +1ms\n  express:router use / query +0ms\n  express:router:layer new / +0ms\n  express:router use / expressInit +0ms\n  express:router:layer new / +0ms\n  express:router use / favicon +1ms\n  express:router:layer new / +0ms\n  express:router use / logger +0ms\n  express:router:layer new / +0ms\n  express:router use / jsonParser +0ms\n  express:router:layer new / +1ms\n  express:router use / urlencodedParser +0ms\n  express:router:layer new / +0ms\n  express:router use / cookieParser +0ms\n  express:router:layer new / +0ms\n  express:router use / stylus +90ms\n  express:router:layer new / +0ms\n  express:router use / serveStatic +0ms\n  express:router:layer new / +0ms\n  express:router use / router +0ms\n  express:router:layer new / +1ms\n  express:router use /users router +0ms\n  express:router:layer new /users +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms",
+        "$ DEBUG=express:* node ./bin/www\n  express:router:route new / +0ms\n  express:router:layer new / +1ms\n  express:router:route get / +1ms\n  express:router:layer new / +0ms\n  express:router:route new / +1ms\n  express:router:layer new / +0ms\n  express:router:route get / +0ms\n  express:router:layer new / +0ms\n  express:application compile etag weak +1ms\n  express:application compile query parser extended +0ms\n  express:application compile trust proxy false +0ms\n  express:application booting in development mode +1ms\n  express:router use / query +0ms\n  express:router:layer new / +0ms\n  express:router use / expressInit +0ms\n  express:router:layer new / +0ms\n  express:router use / favicon +1ms\n  express:router:layer new / +0ms\n  express:router use / logger +0ms\n  express:router:layer new / +0ms\n  express:router use / jsonParser +0ms\n  express:router:layer new / +1ms\n  express:router use / urlencodedParser +0ms\n  express:router:layer new / +0ms\n  express:router use / cookieParser +0ms\n  express:router:layer new / +0ms\n  express:router use / stylus +90ms\n  express:router:layer new / +0ms\n  express:router use / serveStatic +0ms\n  express:router:layer new / +0ms\n  express:router use / router +0ms\n  express:router:layer new / +1ms\n  express:router use /users router +0ms\n  express:router:layer new /users +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms\n  express:router use / &lt;anonymous&gt; +0ms\n  express:router:layer new / +0ms",
+        "express:router dispatching GET / +4h\n  express:router query  : / +2ms\n  express:router expressInit  : / +0ms\n  express:router favicon  : / +0ms\n  express:router logger  : / +1ms\n  express:router jsonParser  : / +0ms\n  express:router urlencodedParser  : / +1ms\n  express:router cookieParser  : / +0ms\n  express:router stylus  : / +0ms\n  express:router serveStatic  : / +2ms\n  express:router router  : / +2ms\n  express:router dispatching GET / +1ms\n  express:view lookup \"index.pug\" +338ms\n  express:view stat \"/projects/example/views/index.pug\" +0ms\n  express:view render \"/projects/example/views/index.pug\" +1ms",
+        "express:router dispatching GET / +4h\n  express:router query  : / +2ms\n  express:router expressInit  : / +0ms\n  express:router favicon  : / +0ms\n  express:router logger  : / +1ms\n  express:router jsonParser  : / +0ms\n  express:router urlencodedParser  : / +1ms\n  express:router cookieParser  : / +0ms\n  express:router stylus  : / +0ms\n  express:router serveStatic  : / +2ms\n  express:router router  : / +2ms\n  express:router dispatching GET / +1ms\n  express:view lookup \"index.pug\" +338ms\n  express:view stat \"/projects/example/views/index.pug\" +0ms\n  express:view render \"/projects/example/views/index.pug\" +1ms",
+        "express:router",
+        "express:application",
+        "$ express sample-app",
+        "$ DEBUG=sample-app:* node ./bin/www",
+        "$ DEBUG=sample-app:* node ./bin/www",
+        "$ DEBUG=http,mail,express:* node index.js",
+        "$ DEBUG=http,mail,express:* node index.js",
+        "DEBUG_COLORS",
+        "DEBUG_DEPTH",
+        "DEBUG_SHOW_HIDDEN",
+        "util.inspect()"
+      ],
+      "chunks": [
+        {
+          "content": "Debugging Express To see all the internal logs used in Express, set the DEBUG environment variable to express:* when launching your app DEBUG=express:* node index js On Windows, use the corresponding command env:DEBUG = \"express:*\"; node index js Running this command on the default app generated by the express generator prints the following output:  DEBUG=express:* node",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "/bin/www express:router:route new / +0ms express:router:layer new / +1ms express:router:route get / +1ms express:router:layer new / +0ms express:router:route new / +1ms express:router:layer new / +0ms express:router:route get / +0ms express:router:layer new / +0ms express:application compile etag weak +1ms express:application compile query parser extended +0ms express:application compile trust proxy false +0ms express:application booting in development mode +1ms express:router use / query +0ms express:router:layer new / +0ms express:router use / expressInit +0ms express:router:layer new / +0ms express:router use / favicon +1ms express:router:layer new / +0ms express:router use / logger +0ms express:router:layer new / +0ms express:router use / jsonParser +0ms express:router:layer new / +1ms express:router use / urlencodedParser +0ms express:router:layer new / +0ms express:router use / cookieParser +0ms express:router:layer new / +0ms express:router use / stylus +90ms express:router:layer new / +0ms express:router use / serveStatic +0ms express:router:layer new / +0ms express:router use / router +0ms express:router:layer new / +1ms express:router use /users router +0ms express:router:layer new /users +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms express:router use / lt;anonymousgt; +0ms express:router:layer new / +0ms When a request is then made to the app, you will see the logs specified in the Express code: express:router dispatching GET / +4h express:router query : / +2ms express:router expressInit : / +0ms express:router favicon : / +0ms express:router logger : / +1ms express:router jsonParser : / +0ms express:router urlencodedParser : / +1ms express:router cookieParser : / +0ms express:router stylus : / +0ms express:router serveStatic : / +2ms express:router router : / +2ms express:router dispatching GET / +1ms express:view lookup \"index",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "pug\" +338ms express:view stat \"/projects/example/views/index pug\" +0ms express:view render \"/projects/example/views/index pug\" +1ms To see the logs only from the router implementation, set the value of DEBUG to express:router Likewise, to see logs only from the application implementation, set the value of DEBUG to express:application, and so on",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "Applications generated by express An application generated by the express command uses the debug module and its debug namespace is scoped to the name of the application For example, if you generated the app with  express sample-app, you can enable the debug statements with the following command:  DEBUG=sample-app:* node /bin/www You can specify more than one debug namespace by assigning a comma-separated list of names:  DEBUG=http,mail,express:* node index",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "js Advanced options When running through Node js, you can set a few environment variables that will change the behavior of the debug logging: Name Purpose DEBUG Enables/disables specific debugging namespaces DEBUG_COLORS Whether or not to use colors in the debug output DEBUG_DEPTH Object inspection depth DEBUG_FD File descriptor to write debug output to DEBUG_SHOW_HIDDEN Shows hidden properties on inspected objects",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "Note The environment variables beginning with DEBUG_ end up being converted into an Options object that gets used with o/O formatters See the Node js documentation for util inspect() for the complete list Edit this page",
+          "url": "https://expressjs.com/en/guide/debugging.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/behind-proxies.html",
+      "title": "Express behind proxies",
+      "content": "Express behind proxies When running an Express app behind a reverse proxy, some of the Express APIs may return different values than expected. In order to adjust for this, the trust proxy application setting may be used to expose information provided by the reverse proxy in the Express APIs. The most common issue is express APIs that expose the clients IP address may instead show an internal IP address of the reverse proxy. When configuring the trust proxy setting, it is important to understand the exact setup of the reverse proxy. Since this setting will trust values provided in the request, it is important that the combination of the setting in Express matches how the reverse proxy operates. The application setting trust proxy may be set to one of the values listed in the following table. TypeValue Boolean If true, the clients IP address is understood as the left-most entry in the X-Forwarded-For header. If false, the app is understood as directly facing the client and the clients IP address is derived from req.socket.remoteAddress. This is the default setting. When setting to true, it is important to ensure that the last reverse proxy trusted is removing/overwriting all of the following HTTP headers: X-Forwarded-For, X-Forwarded-Host, and X-Forwarded-Proto, otherwise it may be possible for the client to provide any value. IP addresses An IP address, subnet, or an array of IP addresses and subnets to trust as being a reverse proxy. The following list shows the pre-configured subnet names: loopback - 127.0.0.1/8, ::1/128 linklocal - 169.254.0.0/16, fe80::/10 uniquelocal - 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fc00::/7 You can set IP addresses in any of the following ways: app.set('trust proxy', 'loopback') // specify a single subnet app.set('trust proxy', 'loopback, 123.123.123.123') // specify a subnet and an address app.set('trust proxy', 'loopback, linklocal, uniquelocal') // specify multiple subnets as CSV app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']) // specify multiple subnets as an array When specified, the IP addresses or the subnets are excluded from the address determination process, and the untrusted IP address nearest to the application server is determined as the clients IP address. This works by checking if req.socket.remoteAddress is trusted. If so, then each address in X-Forwarded-For is checked from right to left until the first non-trusted address. Number Use the address that is at most n number of hops away from the Express application. req.socket.remoteAddress is the first hop, and the rest are looked for in the X-Forwarded-For header from right to left. A value of 0 means that the first untrusted address would be req.socket.remoteAddress, i.e. there is no reverse proxy. When using this setting, it is important to ensure there are not multiple, different-length paths to the Express application such that the client can be less than the configured number of hops away, otherwise it may be possible for the client to provide any value. Function Custom trust implementation. app.set('trust proxy', (ip) = { if (ip === '127.0.0.1'  ip === '123.123.123.123') return true // trusted IPs else return false }) Enabling trust proxy will have the following impact: The value of req.hostname is derived from the value set in the X-Forwarded-Host header, which can be set by the client or by the proxy. X-Forwarded-Proto can be set by the reverse proxy to tell the app whether it is https or http or even an invalid name. This value is reflected by req.protocol. The req.ip and req.ips values are populated based on the socket address and X-Forwarded-For header, starting at the first untrusted address. The trust proxy setting is implemented using the proxy-addr package. For more information, see its documentation. Edit this page",
+      "code_blocks": [
+        "trust proxy",
+        "trust proxy",
+        "trust proxy",
+        "X-Forwarded-For",
+        "req.socket.remoteAddress",
+        "X-Forwarded-For",
+        "X-Forwarded-Host",
+        "X-Forwarded-Proto",
+        "127.0.0.1/8",
+        "169.254.0.0/16",
+        "172.16.0.0/12",
+        "192.168.0.0/16",
+        "app.set('trust proxy', 'loopback') // specify a single subnet\napp.set('trust proxy', 'loopback, 123.123.123.123') // specify a subnet and an address\napp.set('trust proxy', 'loopback, linklocal, uniquelocal') // specify multiple subnets as CSV\napp.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']) // specify multiple subnets as an array",
+        "app.set('trust proxy', 'loopback') // specify a single subnet\napp.set('trust proxy', 'loopback, 123.123.123.123') // specify a subnet and an address\napp.set('trust proxy', 'loopback, linklocal, uniquelocal') // specify multiple subnets as CSV\napp.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']) // specify multiple subnets as an array",
+        "req.socket.remoteAddress",
+        "X-Forwarded-For",
+        "req.socket.remoteAddress",
+        "X-Forwarded-For",
+        "req.socket.remoteAddress",
+        "app.set('trust proxy', (ip) => {\n  if (ip === '127.0.0.1' || ip === '123.123.123.123') return true // trusted IPs\n  else return false\n})",
+        "app.set('trust proxy', (ip) => {\n  if (ip === '127.0.0.1' || ip === '123.123.123.123') return true // trusted IPs\n  else return false\n})",
+        "trust proxy",
+        "X-Forwarded-Host",
+        "X-Forwarded-Proto",
+        "X-Forwarded-For",
+        "trust proxy"
+      ],
+      "chunks": [
+        {
+          "content": "Express behind proxies When running an Express app behind a reverse proxy, some of the Express APIs may return different values than expected In order to adjust for this, the trust proxy application setting may be used to expose information provided by the reverse proxy in the Express APIs The most common issue is express APIs that expose the clients IP address may instead show an internal IP address of the reverse proxy",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "When configuring the trust proxy setting, it is important to understand the exact setup of the reverse proxy Since this setting will trust values provided in the request, it is important that the combination of the setting in Express matches how the reverse proxy operates The application setting trust proxy may be set to one of the values listed in the following table TypeValue Boolean If true, the clients IP address is understood as the left-most entry in the X-Forwarded-For header",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "If false, the app is understood as directly facing the client and the clients IP address is derived from req socket remoteAddress This is the default setting When setting to true, it is important to ensure that the last reverse proxy trusted is removing/overwriting all of the following HTTP headers: X-Forwarded-For, X-Forwarded-Host, and X-Forwarded-Proto, otherwise it may be possible for the client to provide any value",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": "IP addresses An IP address, subnet, or an array of IP addresses and subnets to trust as being a reverse proxy The following list shows the pre-configured subnet names: loopback - 127 0 0 1/8, ::1/128 linklocal - 169 254 0 0/16, fe80::/10 uniquelocal - 10 0 0 0/8, 172 16 0 0/12, 192 168 0 0/16, fc00::/7 You can set IP addresses in any of the following ways: app set('trust proxy', 'loopback') // specify a single subnet app set('trust proxy', 'loopback, 123 123 123",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "123') // specify a subnet and an address app set('trust proxy', 'loopback, linklocal, uniquelocal') // specify multiple subnets as CSV app set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']) // specify multiple subnets as an array When specified, the IP addresses or the subnets are excluded from the address determination process, and the untrusted IP address nearest to the application server is determined as the clients IP address This works by checking if req socket",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "remoteAddress is trusted If so, then each address in X-Forwarded-For is checked from right to left until the first non-trusted address Number Use the address that is at most n number of hops away from the Express application req socket remoteAddress is the first hop, and the rest are looked for in the X-Forwarded-For header from right to left A value of 0 means that the first untrusted address would be req socket remoteAddress, i e there is no reverse proxy",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "When using this setting, it is important to ensure there are not multiple, different-length paths to the Express application such that the client can be less than the configured number of hops away, otherwise it may be possible for the client to provide any value Function Custom trust implementation app set('trust proxy', (ip) = { if (ip === '127 0 0 1'  ip === '123 123 123 123') return true // trusted IPs else return false }) Enabling trust proxy will have the following impact: The value of req",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "hostname is derived from the value set in the X-Forwarded-Host header, which can be set by the client or by the proxy X-Forwarded-Proto can be set by the reverse proxy to tell the app whether it is https or http or even an invalid name This value is reflected by req protocol The req ip and req ips values are populated based on the socket address and X-Forwarded-For header, starting at the first untrusted address The trust proxy setting is implemented using the proxy-addr package",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "For more information, see its documentation Edit this page",
+          "url": "https://expressjs.com/en/guide/behind-proxies.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        }
+      ],
+      "library": "express"
+    },
+    {
+      "url": "https://expressjs.com/en/guide/migrating-4.html",
+      "title": "Migrating to Express 4",
+      "content": "Moving to Express 4 Overview Express 4 is a breaking change from Express 3. That means an existing Express 3 app will not work if you update the Express version in its dependencies. This article covers: Changes in Express 4. An example of migrating an Express 3 app to Express 4. Upgrading to the Express 4 app generator. Changes in Express 4 There are several significant changes in Express 4: Changes to Express core and middleware system. The dependencies on Connect and built-in middleware were removed, so you must add middleware yourself. Changes to the routing system. Various other changes. See also: New features in 4.x. Migrating from 3.x to 4.x. Changes to Express core and middleware system Express 4 no longer depends on Connect, and removes all built-in middleware from its core, except for the express.static function. This means that Express is now an independent routing and middleware web framework, and Express versioning and releases are not affected by middleware updates. Without built-in middleware, you must explicitly add all the middleware that is required to run your app. Simply follow these steps: Install the module: npm install --save module-name In your app, require the module: require('module-name') Use the module according to its documentation: app.use( ... ) The following table lists Express 3 middleware and their counterparts in Express 4. Express 3Express 4 express.bodyParser body-parser + multer express.compress compression express.cookieSession cookie-session express.cookieParser cookie-parser express.logger morgan express.session express-session express.favicon serve-favicon express.responseTime response-time express.errorHandler errorhandler express.methodOverride method-override express.timeout connect-timeout express.vhost vhost express.csrf csurf express.directory serve-index express.static serve-static Here is the complete list of Express 4 middleware. In most cases, you can simply replace the old version 3 middleware with its Express 4 counterpart. For details, see the module documentation in GitHub. app.use accepts parameters In version 4 you can use a variable parameter to define the path where middleware functions are loaded, then read the value of the parameter from the route handler. For example: app.use('/book/:id', (req, res, next) = { console.log('ID:', req.params.id) next() }) The routing system Apps now implicitly load routing middleware, so you no longer have to worry about the order in which middleware is loaded with respect to the router middleware. The way you define routes is unchanged, but the routing system has two new features to help organize your routes: A new method, app.route(), to create chainable route handlers for a route path. A new class, express.Router, to create modular mountable route handlers. app.route() method The new app.route() method enables you to create chainable route handlers for a route path. Because the path is specified in a single location, creating modular routes is helpful, as is reducing redundancy and typos. For more information about routes, see Router() documentation. Here is an example of chained route handlers that are defined by using the app.route() function. app.route('/book') .get((req, res) = { res.send('Get a random book') }) .post((req, res) = { res.send('Add a book') }) .put((req, res) = { res.send('Update the book') }) express.Router class The other feature that helps to organize routes is a new class, express.Router, that you can use to create modular mountable route handlers. A Router instance is a complete middleware and routing system; for this reason it is often referred to as a mini-app. The following example creates a router as a module, loads middleware in it, defines some routes, and mounts it on a path on the main app. For example, create a router file named birds.js in the app directory, with the following content: var express = require('express') var router = express.Router() // middleware specific to this router router.use((req, res, next) = { console.log('Time: ', Date.now()) next() }) // define the home page route router.get('/', (req, res) = { res.send('Birds home page') }) // define the about route router.get('/about', (req, res) = { res.send('About birds') }) module.exports = router Then, load the router module in the app: var birds = require('./birds') // ... app.use('/birds', birds) The app will now be able to handle requests to the /birds and /birds/about paths, and will call the timeLog middleware that is specific to the route. Other changes The following table lists other small but important changes in Express 4: Object Description Node.js Express 4 requires Node.js 0.10.x or later and has dropped support for Node.js 0.8.x. http.createServer() The http module is no longer needed, unless you need to directly work with it (socket.io/SPDY/HTTPS). The app can be started by using the app.listen() function. app.configure() The app.configure() function has been removed. Use the process.env.NODE_ENV or app.get('env') function to detect the environment and configure the app accordingly. json spaces The json spaces application property is disabled by default in Express 4. req.accepted() Use req.accepts(), req.acceptsEncodings(), req.acceptsCharsets(), and req.acceptsLanguages(). res.location() No longer resolves relative URLs. req.params Was an array; now an object. res.locals Was a function; now an object. res.headerSent Changed to res.headersSent. app.route Now available as app.mountpath. res.on('header') Removed. res.charset Removed. res.setHeader('Set-Cookie', val) Functionality is now limited to setting the basic cookie value. Use res.cookie() for added functionality. Example app migration Here is an example of migrating an Express 3 application to Express 4. The files of interest are app.js and package.json. Version 3 app app.js Consider an Express v.3 application with the following app.js file: var express = require('express') var routes = require('./routes') var user = require('./routes/user') var http = require('http') var path = require('path') var app = express() // all environments app.set('port', process.env.PORT  3000) app.set('views', path.join(__dirname, 'views')) app.set('view engine', 'pug') app.use(express.favicon()) app.use(express.logger('dev')) app.use(express.methodOverride()) app.use(express.session({ secret: 'your secret here' })) app.use(express.bodyParser()) app.use(app.router) app.use(express.static(path.join(__dirname, 'public'))) // development only if (app.get('env') === 'development') { app.use(express.errorHandler()) } app.get('/', routes.index) app.get('/users', user.list) http.createServer(app).listen(app.get('port'), () = { console.log('Express server listening on port ' + app.get('port')) }) package.json The accompanying version 3 package.json file might look something like this: { \"name\": \"application-name\", \"version\": \"0.0.1\", \"private\": true, \"scripts\": { \"start\": \"node app.js\" }, \"dependencies\": { \"express\": \"3.12.0\", \"pug\": \"*\" } } Process Begin the migration process by installing the required middleware for the Express 4 app and updating Express and Pug to their respective latest version with the following command:  npm install serve-favicon morgan method-override express-session body-parser multer errorhandler expresslatest puglatest --save Make the following changes to app.js: The built-in Express middleware functions express.favicon, express.logger, express.methodOverride, express.session, express.bodyParser and express.errorHandler are no longer available on the express object. You must install their alternatives manually and load them in the app. You no longer need to load the app.router function. It is not a valid Express 4 app object, so remove the app.use(app.router); code. Make sure that the middleware functions are loaded in the correct order - load errorHandler after loading the app routes. Version 4 app package.json Running the above npm command will update package.json as follows: { \"name\": \"application-name\", \"version\": \"0.0.1\", \"private\": true, \"scripts\": { \"start\": \"node app.js\" }, \"dependencies\": { \"body-parser\": \"1.5.2\", \"errorhandler\": \"1.1.1\", \"express\": \"4.8.0\", \"express-session\": \"1.7.2\", \"pug\": \"2.0.0\", \"method-override\": \"2.1.2\", \"morgan\": \"1.2.2\", \"multer\": \"0.1.3\", \"serve-favicon\": \"2.0.1\" } } app.js Then, remove invalid code, load the required middleware, and make other changes as necessary. The app.js file will look like this: var http = require('http') var express = require('express') var routes = require('./routes') var user = require('./routes/user') var path = require('path') var favicon = require('serve-favicon') var logger = require('morgan') var methodOverride = require('method-override') var session = require('express-session') var bodyParser = require('body-parser') var multer = require('multer') var errorHandler = require('errorhandler') var app = express() // all environments app.set('port', process.env.PORT  3000) app.set('views', path.join(__dirname, 'views')) app.set('view engine', 'pug') app.use(favicon(path.join(__dirname, '/public/favicon.ico'))) app.use(logger('dev')) app.use(methodOverride()) app.use(session({ resave: true, saveUninitialized: true, secret: 'uwotm8' })) app.use(bodyParser.json()) app.use(bodyParser.urlencoded({ extended: true })) app.use(multer()) app.use(express.static(path.join(__dirname, 'public'))) app.get('/', routes.index) app.get('/users', user.list) // error handling middleware should be loaded after the loading the routes if (app.get('env') === 'development') { app.use(errorHandler()) } var server = http.createServer(app) server.listen(app.get('port'), () = { console.log('Express server listening on port ' + app.get('port')) }) Unless you need to work directly with the http module (socket.io/SPDY/HTTPS), loading it is not required, and the app can be simply started this way: app.listen(app.get('port'), () = { console.log('Express server listening on port ' + app.get('port')) }) Run the app The migration process is complete, and the app is now an Express 4 app. To confirm, start the app by using the following command:  node . Load http://localhost:3000 and see the home page being rendered by Express 4. Upgrading to the Express 4 app generator The command-line tool to generate an Express app is still express, but to upgrade to the new version, you must uninstall the Express 3 app generator and then install the new express-generator. Installing If you already have the Express 3 app generator installed on your system, you must uninstall it:  npm uninstall -g express Depending on how your file and directory privileges are configured, you might need to run this command with sudo. Now install the new generator:  npm install -g express-generator Depending on how your file and directory privileges are configured, you might need to run this command with sudo. Now the express command on your system is updated to the Express 4 generator. Changes to the app generator Command options and use largely remain the same, with the following exceptions: Removed the --sessions option. Removed the --jshtml option. Added the --hogan option to support Hogan.js. Example Execute the following command to create an Express 4 app:  express app4 If you look at the contents of the app4/app.js file, you will notice that all the middleware functions (except express.static) that are required for the app are loaded as independent modules, and the router middleware is no longer explicitly loaded in the app. You will also notice that the app.js file is now a Node.js module, in contrast to the standalone app that was generated by the old generator. After installing the dependencies, start the app by using the following command:  npm start If you look at the npm start script in the package.json file, you will notice that the actual command that starts the app is node ./bin/www, which used to be node app.js in Express 3. Because the app.js file that was generated by the Express 4 generator is now a Node.js module, it can no longer be started independently as an app (unless you modify the code). The module must be loaded in a Node.js file and started via the Node.js file. The Node.js file is ./bin/www in this case. Neither the bin directory nor the extensionless www file is mandatory for creating an Express app or starting the app. They are just suggestions made by the generator, so feel free to modify them to suit your needs. To get rid of the www directory and keep things the Express 3 way, delete the line that says module.exports = app; at the end of the app.js file, then paste the following code in its place: app.set('port', process.env.PORT  3000) var server = app.listen(app.get('port'), () = { debug('Express server listening on port ' + server.address().port) }) Ensure that you load the debug module at the top of the app.js file by using the following code: var debug = require('debug')('app4') Next, change \"start\": \"node ./bin/www\" in the package.json file to \"start\": \"node app.js\". You have now moved the functionality of ./bin/www back to app.js. This change is not recommended, but the exercise helps you to understand how the ./bin/www file works, and why the app.js file no longer starts on its own. Edit this page",
+      "code_blocks": [
+        "express.static",
+        "npm install --save <module-name>",
+        "require('module-name')",
+        "app.use( ... )",
+        "express.bodyParser",
+        "express.compress",
+        "express.cookieSession",
+        "express.cookieParser",
+        "express.logger",
+        "express.session",
+        "express.favicon",
+        "express.responseTime",
+        "express.errorHandler",
+        "express.methodOverride",
+        "express.timeout",
+        "express.vhost",
+        "express.csrf",
+        "express.directory",
+        "express.static",
+        "app.use('/book/:id', (req, res, next) => {\n  console.log('ID:', req.params.id)\n  next()\n})",
+        "app.use('/book/:id', (req, res, next) => {\n  console.log('ID:', req.params.id)\n  next()\n})",
+        "app.route()",
+        "express.Router",
+        "app.route()",
+        "app.route()",
+        "app.route()",
+        "app.route('/book')\n  .get((req, res) => {\n    res.send('Get a random book')\n  })\n  .post((req, res) => {\n    res.send('Add a book')\n  })\n  .put((req, res) => {\n    res.send('Update the book')\n  })",
+        "app.route('/book')\n  .get((req, res) => {\n    res.send('Get a random book')\n  })\n  .post((req, res) => {\n    res.send('Add a book')\n  })\n  .put((req, res) => {\n    res.send('Update the book')\n  })",
+        "express.Router",
+        "express.Router",
+        "var express = require('express')\nvar router = express.Router()\n\n// middleware specific to this router\nrouter.use((req, res, next) => {\n  console.log('Time: ', Date.now())\n  next()\n})\n// define the home page route\nrouter.get('/', (req, res) => {\n  res.send('Birds home page')\n})\n// define the about route\nrouter.get('/about', (req, res) => {\n  res.send('About birds')\n})\n\nmodule.exports = router",
+        "var express = require('express')\nvar router = express.Router()\n\n// middleware specific to this router\nrouter.use((req, res, next) => {\n  console.log('Time: ', Date.now())\n  next()\n})\n// define the home page route\nrouter.get('/', (req, res) => {\n  res.send('Birds home page')\n})\n// define the about route\nrouter.get('/about', (req, res) => {\n  res.send('About birds')\n})\n\nmodule.exports = router",
+        "var birds = require('./birds')\n\n// ...\n\napp.use('/birds', birds)",
+        "var birds = require('./birds')\n\n// ...\n\napp.use('/birds', birds)",
+        "/birds/about",
+        "http.createServer()",
+        "app.listen()",
+        "app.configure()",
+        "app.configure()",
+        "process.env.NODE_ENV",
+        "app.get('env')",
+        "json spaces",
+        "json spaces",
+        "req.accepted()",
+        "req.accepts()",
+        "req.acceptsEncodings()",
+        "req.acceptsCharsets()",
+        "req.acceptsLanguages()",
+        "res.location()",
+        "res.headerSent",
+        "res.headersSent",
+        "app.mountpath",
+        "res.on('header')",
+        "res.charset",
+        "res.setHeader('Set-Cookie', val)",
+        "res.cookie()",
+        "package.json",
+        "var express = require('express')\nvar routes = require('./routes')\nvar user = require('./routes/user')\nvar http = require('http')\nvar path = require('path')\n\nvar app = express()\n\n// all environments\napp.set('port', process.env.PORT || 3000)\napp.set('views', path.join(__dirname, 'views'))\napp.set('view engine', 'pug')\napp.use(express.favicon())\napp.use(express.logger('dev'))\napp.use(express.methodOverride())\napp.use(express.session({ secret: 'your secret here' }))\napp.use(express.bodyParser())\napp.use(app.router)\napp.use(express.static(path.join(__dirname, 'public')))\n\n// development only\nif (app.get('env') === 'development') {\n  app.use(express.errorHandler())\n}\n\napp.get('/', routes.index)\napp.get('/users', user.list)\n\nhttp.createServer(app).listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "var express = require('express')\nvar routes = require('./routes')\nvar user = require('./routes/user')\nvar http = require('http')\nvar path = require('path')\n\nvar app = express()\n\n// all environments\napp.set('port', process.env.PORT || 3000)\napp.set('views', path.join(__dirname, 'views'))\napp.set('view engine', 'pug')\napp.use(express.favicon())\napp.use(express.logger('dev'))\napp.use(express.methodOverride())\napp.use(express.session({ secret: 'your secret here' }))\napp.use(express.bodyParser())\napp.use(app.router)\napp.use(express.static(path.join(__dirname, 'public')))\n\n// development only\nif (app.get('env') === 'development') {\n  app.use(express.errorHandler())\n}\n\napp.get('/', routes.index)\napp.get('/users', user.list)\n\nhttp.createServer(app).listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "package.json",
+        "package.json",
+        "{\n  \"name\": \"application-name\",\n  \"version\": \"0.0.1\",\n  \"private\": true,\n  \"scripts\": {\n    \"start\": \"node app.js\"\n  },\n  \"dependencies\": {\n    \"express\": \"3.12.0\",\n    \"pug\": \"*\"\n  }\n}",
+        "{\n  \"name\": \"application-name\",\n  \"version\": \"0.0.1\",\n  \"private\": true,\n  \"scripts\": {\n    \"start\": \"node app.js\"\n  },\n  \"dependencies\": {\n    \"express\": \"3.12.0\",\n    \"pug\": \"*\"\n  }\n}",
+        "$ npm install serve-favicon morgan method-override express-session body-parser multer errorhandler express@latest pug@latest --save",
+        "$ npm install serve-favicon morgan method-override express-session body-parser multer errorhandler express@latest pug@latest --save",
+        "express.favicon",
+        "express.logger",
+        "express.methodOverride",
+        "express.session",
+        "express.bodyParser",
+        "express.errorHandler",
+        "app.use(app.router);",
+        "errorHandler",
+        "package.json",
+        "package.json",
+        "{\n  \"name\": \"application-name\",\n  \"version\": \"0.0.1\",\n  \"private\": true,\n  \"scripts\": {\n    \"start\": \"node app.js\"\n  },\n  \"dependencies\": {\n    \"body-parser\": \"^1.5.2\",\n    \"errorhandler\": \"^1.1.1\",\n    \"express\": \"^4.8.0\",\n    \"express-session\": \"^1.7.2\",\n    \"pug\": \"^2.0.0\",\n    \"method-override\": \"^2.1.2\",\n    \"morgan\": \"^1.2.2\",\n    \"multer\": \"^0.1.3\",\n    \"serve-favicon\": \"^2.0.1\"\n  }\n}",
+        "{\n  \"name\": \"application-name\",\n  \"version\": \"0.0.1\",\n  \"private\": true,\n  \"scripts\": {\n    \"start\": \"node app.js\"\n  },\n  \"dependencies\": {\n    \"body-parser\": \"^1.5.2\",\n    \"errorhandler\": \"^1.1.1\",\n    \"express\": \"^4.8.0\",\n    \"express-session\": \"^1.7.2\",\n    \"pug\": \"^2.0.0\",\n    \"method-override\": \"^2.1.2\",\n    \"morgan\": \"^1.2.2\",\n    \"multer\": \"^0.1.3\",\n    \"serve-favicon\": \"^2.0.1\"\n  }\n}",
+        "var http = require('http')\nvar express = require('express')\nvar routes = require('./routes')\nvar user = require('./routes/user')\nvar path = require('path')\n\nvar favicon = require('serve-favicon')\nvar logger = require('morgan')\nvar methodOverride = require('method-override')\nvar session = require('express-session')\nvar bodyParser = require('body-parser')\nvar multer = require('multer')\nvar errorHandler = require('errorhandler')\n\nvar app = express()\n\n// all environments\napp.set('port', process.env.PORT || 3000)\napp.set('views', path.join(__dirname, 'views'))\napp.set('view engine', 'pug')\napp.use(favicon(path.join(__dirname, '/public/favicon.ico')))\napp.use(logger('dev'))\napp.use(methodOverride())\napp.use(session({\n  resave: true,\n  saveUninitialized: true,\n  secret: 'uwotm8'\n}))\napp.use(bodyParser.json())\napp.use(bodyParser.urlencoded({ extended: true }))\napp.use(multer())\napp.use(express.static(path.join(__dirname, 'public')))\n\napp.get('/', routes.index)\napp.get('/users', user.list)\n\n// error handling middleware should be loaded after the loading the routes\nif (app.get('env') === 'development') {\n  app.use(errorHandler())\n}\n\nvar server = http.createServer(app)\nserver.listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "var http = require('http')\nvar express = require('express')\nvar routes = require('./routes')\nvar user = require('./routes/user')\nvar path = require('path')\n\nvar favicon = require('serve-favicon')\nvar logger = require('morgan')\nvar methodOverride = require('method-override')\nvar session = require('express-session')\nvar bodyParser = require('body-parser')\nvar multer = require('multer')\nvar errorHandler = require('errorhandler')\n\nvar app = express()\n\n// all environments\napp.set('port', process.env.PORT || 3000)\napp.set('views', path.join(__dirname, 'views'))\napp.set('view engine', 'pug')\napp.use(favicon(path.join(__dirname, '/public/favicon.ico')))\napp.use(logger('dev'))\napp.use(methodOverride())\napp.use(session({\n  resave: true,\n  saveUninitialized: true,\n  secret: 'uwotm8'\n}))\napp.use(bodyParser.json())\napp.use(bodyParser.urlencoded({ extended: true }))\napp.use(multer())\napp.use(express.static(path.join(__dirname, 'public')))\n\napp.get('/', routes.index)\napp.get('/users', user.list)\n\n// error handling middleware should be loaded after the loading the routes\nif (app.get('env') === 'development') {\n  app.use(errorHandler())\n}\n\nvar server = http.createServer(app)\nserver.listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "app.listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "app.listen(app.get('port'), () => {\n  console.log('Express server listening on port ' + app.get('port'))\n})",
+        "express-generator",
+        "$ npm uninstall -g express",
+        "$ npm uninstall -g express",
+        "$ npm install -g express-generator",
+        "$ npm install -g express-generator",
+        "$ express app4",
+        "$ express app4",
+        "app4/app.js",
+        "express.static",
+        "$ npm start",
+        "$ npm start",
+        "package.json",
+        "node ./bin/www",
+        "node app.js",
+        "module.exports = app;",
+        "app.set('port', process.env.PORT || 3000)\n\nvar server = app.listen(app.get('port'), () => {\n  debug('Express server listening on port ' + server.address().port)\n})",
+        "app.set('port', process.env.PORT || 3000)\n\nvar server = app.listen(app.get('port'), () => {\n  debug('Express server listening on port ' + server.address().port)\n})",
+        "var debug = require('debug')('app4')",
+        "var debug = require('debug')('app4')",
+        "\"start\": \"node ./bin/www\"",
+        "package.json",
+        "\"start\": \"node app.js\""
+      ],
+      "chunks": [
+        {
+          "content": "Moving to Express 4 Overview Express 4 is a breaking change from Express 3 That means an existing Express 3 app will not work if you update the Express version in its dependencies This article covers: Changes in Express 4 An example of migrating an Express 3 app to Express 4 Upgrading to the Express 4 app generator Changes in Express 4 There are several significant changes in Express 4: Changes to Express core and middleware system",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_0"
+        },
+        {
+          "content": "The dependencies on Connect and built-in middleware were removed, so you must add middleware yourself Changes to the routing system Various other changes See also: New features in 4 x Migrating from 3 x to 4 x Changes to Express core and middleware system Express 4 no longer depends on Connect, and removes all built-in middleware from its core, except for the express static function",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_1"
+        },
+        {
+          "content": "This means that Express is now an independent routing and middleware web framework, and Express versioning and releases are not affected by middleware updates Without built-in middleware, you must explicitly add all the middleware that is required to run your app Simply follow these steps: Install the module: npm install --save module-name In your app, require the module: require('module-name') Use the module according to its documentation: app use(",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_2"
+        },
+        {
+          "content": ") The following table lists Express 3 middleware and their counterparts in Express 4 Express 3Express 4 express bodyParser body-parser + multer express compress compression express cookieSession cookie-session express cookieParser cookie-parser express logger morgan express session express-session express favicon serve-favicon express responseTime response-time express errorHandler errorhandler express methodOverride method-override express timeout connect-timeout express vhost vhost express",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_3"
+        },
+        {
+          "content": "csrf csurf express directory serve-index express static serve-static Here is the complete list of Express 4 middleware In most cases, you can simply replace the old version 3 middleware with its Express 4 counterpart For details, see the module documentation in GitHub app use accepts parameters In version 4 you can use a variable parameter to define the path where middleware functions are loaded, then read the value of the parameter from the route handler For example: app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_4"
+        },
+        {
+          "content": "use('/book/:id', (req, res, next) = { console log('ID:', req params id) next() }) The routing system Apps now implicitly load routing middleware, so you no longer have to worry about the order in which middleware is loaded with respect to the router middleware The way you define routes is unchanged, but the routing system has two new features to help organize your routes: A new method, app route(), to create chainable route handlers for a route path A new class, express",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_5"
+        },
+        {
+          "content": "Router, to create modular mountable route handlers app route() method The new app route() method enables you to create chainable route handlers for a route path Because the path is specified in a single location, creating modular routes is helpful, as is reducing redundancy and typos For more information about routes, see Router() documentation Here is an example of chained route handlers that are defined by using the app route() function app route('/book') get((req, res) = { res",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_6"
+        },
+        {
+          "content": "send('Get a random book') }) post((req, res) = { res send('Add a book') }) put((req, res) = { res send('Update the book') }) express Router class The other feature that helps to organize routes is a new class, express Router, that you can use to create modular mountable route handlers A Router instance is a complete middleware and routing system; for this reason it is often referred to as a mini-app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_7"
+        },
+        {
+          "content": "The following example creates a router as a module, loads middleware in it, defines some routes, and mounts it on a path on the main app For example, create a router file named birds js in the app directory, with the following content: var express = require('express') var router = express Router() // middleware specific to this router router use((req, res, next) = { console log('Time: ', Date now()) next() }) // define the home page route router get('/', (req, res) = { res",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_8"
+        },
+        {
+          "content": "send('Birds home page') }) // define the about route router get('/about', (req, res) = { res send('About birds') }) module exports = router Then, load the router module in the app: var birds = require(' /birds') // app use('/birds', birds) The app will now be able to handle requests to the /birds and /birds/about paths, and will call the timeLog middleware that is specific to the route Other changes The following table lists other small but important changes in Express 4: Object Description Node",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_9"
+        },
+        {
+          "content": "js Express 4 requires Node js 0 10 x or later and has dropped support for Node js 0 8 x http createServer() The http module is no longer needed, unless you need to directly work with it (socket io/SPDY/HTTPS) The app can be started by using the app listen() function app configure() The app configure() function has been removed Use the process env NODE_ENV or app get('env') function to detect the environment and configure the app accordingly",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_10"
+        },
+        {
+          "content": "json spaces The json spaces application property is disabled by default in Express 4 req accepted() Use req accepts(), req acceptsEncodings(), req acceptsCharsets(), and req acceptsLanguages() res location() No longer resolves relative URLs req params Was an array; now an object res locals Was a function; now an object res headerSent Changed to res headersSent app route Now available as app mountpath res on('header') Removed res charset Removed res",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_11"
+        },
+        {
+          "content": "setHeader('Set-Cookie', val) Functionality is now limited to setting the basic cookie value Use res cookie() for added functionality Example app migration Here is an example of migrating an Express 3 application to Express 4 The files of interest are app js and package json Version 3 app app js Consider an Express v 3 application with the following app js file: var express = require('express') var routes = require(' /routes') var user = require('",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_12"
+        },
+        {
+          "content": "/routes/user') var http = require('http') var path = require('path') var app = express() // all environments app set('port', process env PORT  3000) app set('views', path join(__dirname, 'views')) app set('view engine', 'pug') app use(express favicon()) app use(express logger('dev')) app use(express methodOverride()) app use(express session({ secret: 'your secret here' })) app use(express bodyParser()) app use(app router) app use(express static(path",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_13"
+        },
+        {
+          "content": "join(__dirname, 'public'))) // development only if (app get('env') === 'development') { app use(express errorHandler()) } app get('/', routes index) app get('/users', user list) http createServer(app) listen(app get('port'), () = { console log('Express server listening on port ' + app get('port')) }) package json The accompanying version 3 package json file might look something like this: { \"name\": \"application-name\", \"version\": \"0 0 1\", \"private\": true, \"scripts\": { \"start\": \"node app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_14"
+        },
+        {
+          "content": "js\" }, \"dependencies\": { \"express\": \"3 12 0\", \"pug\": \"*\" } } Process Begin the migration process by installing the required middleware for the Express 4 app and updating Express and Pug to their respective latest version with the following command:  npm install serve-favicon morgan method-override express-session body-parser multer errorhandler expresslatest puglatest --save Make the following changes to app js: The built-in Express middleware functions express favicon, express logger, express",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_15"
+        },
+        {
+          "content": "methodOverride, express session, express bodyParser and express errorHandler are no longer available on the express object You must install their alternatives manually and load them in the app You no longer need to load the app router function It is not a valid Express 4 app object, so remove the app use(app router); code Make sure that the middleware functions are loaded in the correct order - load errorHandler after loading the app routes Version 4 app package",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_16"
+        },
+        {
+          "content": "json Running the above npm command will update package json as follows: { \"name\": \"application-name\", \"version\": \"0 0 1\", \"private\": true, \"scripts\": { \"start\": \"node app js\" }, \"dependencies\": { \"body-parser\": \"1 5 2\", \"errorhandler\": \"1 1 1\", \"express\": \"4 8 0\", \"express-session\": \"1 7 2\", \"pug\": \"2 0 0\", \"method-override\": \"2 1 2\", \"morgan\": \"1 2 2\", \"multer\": \"0 1 3\", \"serve-favicon\": \"2 0 1\" } } app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_17"
+        },
+        {
+          "content": "js Then, remove invalid code, load the required middleware, and make other changes as necessary The app js file will look like this: var http = require('http') var express = require('express') var routes = require(' /routes') var user = require('",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_18"
+        },
+        {
+          "content": "/routes/user') var path = require('path') var favicon = require('serve-favicon') var logger = require('morgan') var methodOverride = require('method-override') var session = require('express-session') var bodyParser = require('body-parser') var multer = require('multer') var errorHandler = require('errorhandler') var app = express() // all environments app set('port', process env PORT  3000) app set('views', path join(__dirname, 'views')) app set('view engine', 'pug') app use(favicon(path",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_19"
+        },
+        {
+          "content": "join(__dirname, '/public/favicon ico'))) app use(logger('dev')) app use(methodOverride()) app use(session({ resave: true, saveUninitialized: true, secret: 'uwotm8' })) app use(bodyParser json()) app use(bodyParser urlencoded({ extended: true })) app use(multer()) app use(express static(path join(__dirname, 'public'))) app get('/', routes index) app get('/users', user list) // error handling middleware should be loaded after the loading the routes if (app get('env') === 'development') { app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_20"
+        },
+        {
+          "content": "use(errorHandler()) } var server = http createServer(app) server listen(app get('port'), () = { console log('Express server listening on port ' + app get('port')) }) Unless you need to work directly with the http module (socket io/SPDY/HTTPS), loading it is not required, and the app can be simply started this way: app listen(app get('port'), () = { console log('Express server listening on port ' + app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_21"
+        },
+        {
+          "content": "get('port')) }) Run the app The migration process is complete, and the app is now an Express 4 app To confirm, start the app by using the following command:  node Load http://localhost:3000 and see the home page being rendered by Express 4 Upgrading to the Express 4 app generator The command-line tool to generate an Express app is still express, but to upgrade to the new version, you must uninstall the Express 3 app generator and then install the new express-generator",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_22"
+        },
+        {
+          "content": "Installing If you already have the Express 3 app generator installed on your system, you must uninstall it:  npm uninstall -g express Depending on how your file and directory privileges are configured, you might need to run this command with sudo Now install the new generator:  npm install -g express-generator Depending on how your file and directory privileges are configured, you might need to run this command with sudo Now the express command on your system is updated to the Express 4 generator",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_23"
+        },
+        {
+          "content": "Changes to the app generator Command options and use largely remain the same, with the following exceptions: Removed the --sessions option Removed the --jshtml option Added the --hogan option to support Hogan js Example Execute the following command to create an Express 4 app:  express app4 If you look at the contents of the app4/app js file, you will notice that all the middleware functions (except express",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_24"
+        },
+        {
+          "content": "static) that are required for the app are loaded as independent modules, and the router middleware is no longer explicitly loaded in the app You will also notice that the app js file is now a Node js module, in contrast to the standalone app that was generated by the old generator After installing the dependencies, start the app by using the following command:  npm start If you look at the npm start script in the package",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_25"
+        },
+        {
+          "content": "json file, you will notice that the actual command that starts the app is node /bin/www, which used to be node app js in Express 3 Because the app js file that was generated by the Express 4 generator is now a Node js module, it can no longer be started independently as an app (unless you modify the code) The module must be loaded in a Node js file and started via the Node js file The Node js file is /bin/www in this case",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_26"
+        },
+        {
+          "content": "Neither the bin directory nor the extensionless www file is mandatory for creating an Express app or starting the app They are just suggestions made by the generator, so feel free to modify them to suit your needs To get rid of the www directory and keep things the Express 3 way, delete the line that says module exports = app; at the end of the app js file, then paste the following code in its place: app set('port', process env PORT  3000) var server = app listen(app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_27"
+        },
+        {
+          "content": "get('port'), () = { debug('Express server listening on port ' + server address() port) }) Ensure that you load the debug module at the top of the app js file by using the following code: var debug = require('debug')('app4') Next, change \"start\": \"node /bin/www\" in the package json file to \"start\": \"node app js\" You have now moved the functionality of /bin/www back to app js This change is not recommended, but the exercise helps you to understand how the /bin/www file works, and why the app",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_28"
+        },
+        {
+          "content": "js file no longer starts on its own Edit this page",
+          "url": "https://expressjs.com/en/guide/migrating-4.html",
+          "library": "express",
+          "chunk_id": "express_29"
+        }
+      ],
+      "library": "express"
+    }
+  ],
+  "scraped_at": 9323.126313125
+}
