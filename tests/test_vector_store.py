@@ -3,6 +3,7 @@ Test suite for VectorStore functionality.
 """
 
 import pytest
+import pytest_asyncio
 import asyncio
 import tempfile
 import shutil
@@ -17,7 +18,7 @@ from drms.core.vector_store import VectorStore
 class TestVectorStore:
     """Test VectorStore functionality."""
     
-    @pytest.fixture
+    @pytest_asyncio.fixture
     async def vector_store(self):
         """Create a temporary vector store for testing."""
         temp_dir = tempfile.mkdtemp()

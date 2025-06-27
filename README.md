@@ -39,22 +39,36 @@ DRMS (Documentation RAG MCP Server) provides your AI coding assistants with inst
 git clone <your-repo-url>
 cd DRMS
 
-# Install dependencies
-pip install -r requirements.txt
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Copy environment configuration
+# Install dependencies
+pip install -r requirements-minimal.txt  # Core dependencies
+# OR pip install -r requirements.txt     # Full dependencies
+
+# Copy and configure environment
 cp .env.example .env
 # Edit .env with your settings (OpenAI key optional)
 
-# Run demo to test functionality
+# Test installation
 python examples/demo_search.py
 
-# Start MCP server
+# Start MCP server (for Cursor/Windsurf)
 python mcp_server.py
 
-# OR start REST API server
-python drms_api.py
+# OR start REST API server (for universal access)
+python drms_api.py --host localhost --port 8000
 ```
+
+### ✅ Verified Installation
+
+DRMS has been **tested and verified** on:
+- **Python 3.13.3** on macOS ARM64
+- **All core dependencies** installed successfully
+- **MCP server** syntax validated
+- **REST API** health endpoints functional
+- **Basic functionality** tests passing
 
 ## 🎯 Integration Guides
 
@@ -248,15 +262,48 @@ search_documentation("hooks", library="react", filter={"version": "18.x"})
 
 ## 🧪 Testing
 
+### ✅ Verified Test Results
+
+**All core functionality has been tested and verified:**
+
 ```bash
-# Run the demo script
+# Activate virtual environment
+source venv/bin/activate
+
+# Test basic functionality (recommended first test)
 python examples/demo_search.py
+# ✅ All imports successful
+# ✅ Settings configuration working
+# ✅ Text processing functional
+# ✅ Content chunking operational
 
-# Test specific functionality
-python -m pytest tests/
+# Test REST API server
+python drms_api.py --host localhost --port 8001 &
+curl http://localhost:8001/health
+# ✅ {"status":"healthy","vector_store_status":"connected"}
 
-# Test API endpoints
+# Test integration example
 python examples/vscode/integration_example.py
+# ✅ Search, discovery, and examples working
+
+# Run unit tests (basic components)
+PYTHONPATH=src python -m pytest tests/ -v
+# ✅ Core vector store tests passing
+```
+
+### Installation Verification
+
+If you encounter issues, run this quick verification:
+
+```bash
+# Test core imports
+python -c "
+import sys; sys.path.insert(0, 'src')
+from drms.config.settings import Settings
+from drms.core.vector_store import VectorStore
+from drms.scraper.doc_scraper import DocumentationScraper
+print('✅ All core modules imported successfully')
+"
 ```
 
 ## 🐳 Docker Deployment
@@ -276,34 +323,62 @@ curl http://localhost:8000/health
 
 ### Common Issues
 
+**Installation Issues:**
+```bash
+# Use minimal dependencies if full install fails
+pip install -r requirements-minimal.txt
+
+# Check Python version compatibility
+python --version  # Should be 3.8+
+
+# Verify virtual environment
+which python  # Should point to venv/bin/python
+```
+
 **MCP Server not starting:**
 ```bash
 # Check Python path and dependencies
 python --version
 pip list | grep mcp
 
+# Test syntax first
+python -m py_compile mcp_server.py
+
 # Run with debug logging
 DRMS_LOG_LEVEL=DEBUG python mcp_server.py
 ```
 
-**No search results:**
+**REST API Issues:**
 ```bash
-# Check vector database status
-curl http://localhost:8000/health
+# Test API server startup
+python drms_api.py --host localhost --port 8001
 
-# Try discovering the library first
-curl -X POST http://localhost:8000/discover \
-  -d '{"library_name": "your-library"}'
+# Check health endpoint
+curl http://localhost:8001/health
+# Should return: {"status":"healthy"}
+
+# Test basic search
+curl "http://localhost:8001/search/test?max_results=1"
 ```
 
-**Slow performance:**
+**Vector Store/ChromaDB Issues:**
 ```bash
-# Use OpenAI embeddings (faster)
-export DRMS_USE_OPENAI_EMBEDDINGS=true
-export OPENAI_API_KEY=your-key
+# ChromaDB will auto-create on first use
+# Check if directory is writable
+ls -la chroma_db/  # Should exist after first run
 
-# Or reduce result count
-export DRMS_MAX_RESULTS=5
+# Clear and reset if needed
+rm -rf chroma_db/ && python drms_api.py
+```
+
+**Import Errors:**
+```bash
+# Set Python path explicitly
+export PYTHONPATH=src
+python -c "from drms.core.vector_store import VectorStore; print('OK')"
+
+# Or use absolute imports
+python -c "import sys; sys.path.insert(0, 'src'); from drms.core.vector_store import VectorStore; print('OK')"
 ```
 
 ### Debug Mode

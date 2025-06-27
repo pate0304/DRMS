@@ -81,6 +81,11 @@ mcp_cache/
 docs_cache/
 embeddings_cache/
 
+# Demo/Test files
+demo_cache/
+demo_chroma_db/
+test_cache/
+
 # API Keys (additional safety)
 secrets.json
 config.local.json
