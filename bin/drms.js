@@ -11,11 +11,17 @@ const VENV_PATH = path.join(DRMS_HOME, 'venv');
 function findPythonExecutable() {
     const isWindows = process.platform === 'win32';
     
-    if (isWindows) {
-        return path.join(VENV_PATH, 'Scripts', 'python.exe');
-    } else {
-        return path.join(VENV_PATH, 'bin', 'python');
+    // Check if DRMS venv exists
+    if (fs.existsSync(VENV_PATH)) {
+        if (isWindows) {
+            return path.join(VENV_PATH, 'Scripts', 'python.exe');
+        } else {
+            return path.join(VENV_PATH, 'bin', 'python');
+        }
     }
+    
+    // Fall back to system Python
+    return 'python3';
 }
 
 function findMCPServer() {
@@ -23,6 +29,13 @@ function findMCPServer() {
     const sourcePath = path.join(DRMS_HOME, 'src', 'mcp_server.py');
     if (fs.existsSync(sourcePath)) {
         return { type: 'source', path: sourcePath };
+    }
+    
+    // Check for npm package installation
+    const npmPackagePath = path.dirname(require.resolve('drms-mcp-server/package.json'));
+    const npmServerPath = path.join(npmPackagePath, 'mcp_server.py');
+    if (fs.existsSync(npmServerPath)) {
+        return { type: 'npm', path: npmServerPath };
     }
     
     // Fall back to installed package
@@ -74,32 +87,43 @@ function main() {
     const pythonExe = findPythonExecutable();
     const server = findMCPServer();
     
-    // Check if Python executable exists
-    if (!fs.existsSync(pythonExe)) {
-        console.error('❌ DRMS not properly installed. Run: npm install -g @drms/mcp-server');
+    // Check if we can find a Python executable (for venv) or if python3 exists (for system)
+    if (pythonExe !== 'python3' && !fs.existsSync(pythonExe)) {
+        console.error('❌ DRMS not properly installed. Run: npm install -g drms-mcp-server');
         process.exit(1);
     }
     
     let pythonArgs;
+    let workingDir;
     
     if (server.type === 'source') {
         pythonArgs = [server.path, ...args];
+        workingDir = path.dirname(server.path);
+    } else if (server.type === 'npm') {
+        pythonArgs = [server.path, ...args];
+        workingDir = path.dirname(server.path);
     } else {
         pythonArgs = ['-m', server.path, ...args];
+        workingDir = DRMS_HOME;
     }
     
-    // Set working directory
-    const workingDir = server.type === 'source' ? path.dirname(server.path) : DRMS_HOME;
+    // Set up environment
+    const env = {
+        ...process.env,
+        DRMS_HOME: DRMS_HOME
+    };
+    
+    // Add Python path for source and npm installations
+    if (server.type === 'source' || server.type === 'npm') {
+        const srcPath = path.join(path.dirname(server.path), 'src');
+        env.PYTHONPATH = srcPath;
+    }
     
     // Spawn Python process
     const child = spawn(pythonExe, pythonArgs, {
         cwd: workingDir,
         stdio: 'inherit',
-        env: {
-            ...process.env,
-            DRMS_HOME: DRMS_HOME,
-            PYTHONPATH: server.type === 'source' ? path.dirname(server.path) : undefined
-        }
+        env: env
     });
     
     child.on('close', (code) => {
