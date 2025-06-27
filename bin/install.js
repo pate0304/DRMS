@@ -207,10 +207,17 @@ class DRMSInstaller {
                 // Use lstat to check for symlinks as well as regular files
                 const stats = fs.lstatSync(pythonPath);
                 if (stats.isFile() || stats.isSymbolicLink()) {
-                    // Update our venvPython to the actual existing path
-                    this.venvPython = pythonPath;
-                    pythonFound = true;
-                    break;
+                    // Test if the Python executable actually works
+                    try {
+                        await this.runCommand(`"${pythonPath}" --version`, { silent: true });
+                        // Update our venvPython to the actual working path
+                        this.venvPython = pythonPath;
+                        pythonFound = true;
+                        break;
+                    } catch (execError) {
+                        // Python path exists but can't execute, try next
+                        continue;
+                    }
                 }
             } catch (error) {
                 // File doesn't exist, continue to next candidate
@@ -364,23 +371,26 @@ print("All dependencies imported successfully")
         
         // Try different Python environments in order of preference
         const testMethods = [
-            // 1. Virtual environment python
-            {
-                name: 'virtual environment',
-                cmd: fs.existsSync(this.venvPython) ? this.venvPython : null
-            },
-            // 2. Shell activation
+            // 1. Shell activation (most reliable for testing)
             {
                 name: 'shell activation',
                 cmd: fs.existsSync(this.venvActivate) ? 
                     (this.isWindows ? 
                         `"${this.venvActivate}" && python` : 
-                        `source "${this.venvActivate}" && python`) : null
+                        `source "${this.venvActivate}" && python`) : null,
+                useShell: true
+            },
+            // 2. Virtual environment python (if validated)
+            {
+                name: 'virtual environment',
+                cmd: (this.venvPython && fs.existsSync(this.venvPython)) ? this.venvPython : null,
+                useShell: false
             },
             // 3. System python
             {
                 name: 'system Python',
-                cmd: this.pythonCmd
+                cmd: this.pythonCmd,
+                useShell: false
             }
         ];
 
@@ -388,19 +398,19 @@ print("All dependencies imported successfully")
             if (!method.cmd) continue;
             
             try {
-                const testCmd = method.cmd.includes('&&') ? 
+                const testCmd = method.useShell ? 
                     `${method.cmd} -c "${testScript}"` :
                     `"${method.cmd}" -c "${testScript}"`;
                     
                 await this.runCommand(testCmd, { 
                     silent: true, 
-                    shell: method.cmd.includes('&&')
+                    shell: method.useShell
                 });
                 
                 this.log(`✅ Dependencies working correctly via ${method.name}`, 'success');
                 return true;
             } catch (error) {
-                this.log(`${method.name} test failed: ${error.message}`, 'warning');
+                // Don't log individual test failures as warnings - they're expected
                 continue;
             }
         }
@@ -410,25 +420,55 @@ print("All dependencies imported successfully")
         return false;
     }
 
-    generateConfiguration() {
+    async generateConfiguration() {
         this.log('Generating IDE configuration...', 'progress');
         
         const nodeModulesPath = path.dirname(path.dirname(__filename));
         const srcPath = path.join(nodeModulesPath, 'src');
         
-        // Use virtual environment python if it exists, otherwise system python
-        const pythonExecutable = fs.existsSync(this.venvPython) ? this.venvPython : this.pythonCmd;
+        // Determine the best Python executable to use
+        let pythonExecutable;
+        if (this.venvPython && fs.existsSync(this.venvPython)) {
+            // Try to validate the venv python works
+            try {
+                await this.runCommand(`"${this.venvPython}" --version`, { silent: true });
+                pythonExecutable = this.venvPython;
+                this.log('Using virtual environment Python for configuration', 'info');
+            } catch (error) {
+                pythonExecutable = this.pythonCmd;
+                this.log('Virtual environment Python not working, using system Python', 'warning');
+            }
+        } else if (fs.existsSync(this.venvActivate)) {
+            // For IDE configuration, use a wrapper script approach
+            pythonExecutable = this.isWindows ? 
+                this.pythonCmd : 
+                this.pythonCmd;
+            this.log('Using system Python with venv dependencies for configuration', 'info');
+        } else {
+            pythonExecutable = this.pythonCmd;
+            this.log('Using system Python for configuration', 'info');
+        }
         
+        // Create environment configuration
+        const env = {
+            PYTHONPATH: srcPath,
+            DRMS_LOG_LEVEL: 'INFO'
+        };
+        
+        // If we have a virtual environment, configure it properly
+        if (fs.existsSync(this.venvActivate)) {
+            env.VIRTUAL_ENV = this.drmsEnvPath;
+            env.PATH = `${path.join(this.drmsEnvPath, this.isWindows ? 'Scripts' : 'bin')}:$PATH`;
+            this.log('Configuring virtual environment in IDE settings', 'info');
+        }
+
         const config = {
             mcpServers: {
                 drms: {
                     command: pythonExecutable,
                     args: ['mcp_server.py'],
                     cwd: nodeModulesPath,
-                    env: {
-                        PYTHONPATH: srcPath,
-                        DRMS_LOG_LEVEL: 'INFO'
-                    }
+                    env: env
                 }
             }
         };
@@ -470,7 +510,7 @@ print("All dependencies imported successfully")
             await this.installPythonDependencies();
             await this.testInstallation();
             
-            this.generateConfiguration();
+            await this.generateConfiguration();
             this.showNextSteps();
             
         } catch (error) {
