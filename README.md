@@ -1,5 +1,10 @@
 # 🚀 DRMS - Documentation RAG MCP Server
 
+[![npm version](https://badge.fury.io/js/drms-mcp-server.svg)](https://www.npmjs.com/package/drms-mcp-server)
+[![GitHub stars](https://img.shields.io/github/stars/pate0304/DRMS.svg?style=social&label=Star)](https://github.com/pate0304/DRMS)
+[![GitHub issues](https://img.shields.io/github/issues/pate0304/DRMS.svg)](https://github.com/pate0304/DRMS/issues)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Real-time documentation access for AI coding tools with automatic library discovery**
 
 DRMS provides your AI coding assistants with instant access to up-to-date documentation from any library or framework. No more outdated examples or deprecated APIs!
@@ -272,10 +277,38 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
+## 🚀 Get Started Now
+
 **Ready to revolutionize your AI coding experience? Get started with DRMS today!** 🎯
 
 ```bash
+# One-command installation
 npm install -g drms-mcp-server
-pip install mcp chromadb sentence-transformers requests beautifulsoup4 pydantic-settings
-# Add to your IDE config and start coding with confidence!
+npx drms install
 ```
+
+## 📦 NPM Package
+
+[![npm version](https://badge.fury.io/js/drms-mcp-server.svg)](https://www.npmjs.com/package/drms-mcp-server)
+[![npm downloads](https://img.shields.io/npm/dm/drms-mcp-server.svg)](https://www.npmjs.com/package/drms-mcp-server)
+
+**Install:** `npm install -g drms-mcp-server`
+
+## 🤝 Contributing & Support
+
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/pate0304/DRMS/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/pate0304/DRMS/discussions)
+- 📚 **Documentation**: [GitHub Wiki](https://github.com/pate0304/DRMS/wiki)
+- ⭐ **Star us on GitHub**: [DRMS Repository](https://github.com/pate0304/DRMS)
+
+## 👨‍💻 Author
+
+**Created by DRMS Team**
+
+Connect with us:
+- 💼 **LinkedIn**: [https://www.linkedin.com/in/irenicj/](https://www.linkedin.com/in/irenicj/)
+- 🐙 **GitHub**: [https://github.com/pate0304](https://github.com/pate0304)
+
+---
+
+**🎯 Transform your AI coding workflow with DRMS - Documentation at your fingertips!**

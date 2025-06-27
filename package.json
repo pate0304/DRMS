@@ -1,6 +1,6 @@
 {
   "name": "drms-mcp-server",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Documentation RAG MCP Server - Real-time documentation access for AI coding tools",
   "main": "mcp_server.py",
   "bin": {
@@ -33,7 +33,10 @@
     "real-time",
     "library-docs"
   ],
-  "author": "DRMS Team",
+  "author": {
+    "name": "DRMS Team",
+    "url": "https://www.linkedin.com/in/irenicj/"
+  },
   "license": "MIT",
   "homepage": "https://github.com/pate0304/DRMS#readme",
   "bugs": {
