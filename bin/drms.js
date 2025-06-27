@@ -88,6 +88,26 @@ function main() {
     }
     
     const command = args[0];
+    
+    // Handle special commands
+    if (command === 'config') {
+        // Run the configuration generator
+        const configScript = path.join(path.dirname(__filename), '..', 'generate_config.py');
+        const child = spawn('python3', [configScript], {
+            stdio: 'inherit'
+        });
+        
+        child.on('close', (code) => {
+            process.exit(code);
+        });
+        
+        child.on('error', (err) => {
+            console.error('❌ Failed to run configuration generator:', err.message);
+            process.exit(1);
+        });
+        return;
+    }
+    
     const pythonExe = findPythonExecutable();
     const server = findMCPServer();
     
