@@ -135,15 +135,34 @@ class DRMSInstaller {
         ];
 
         try {
-            // Use the virtual environment python
-            const installCmd = this.isWindows
-                ? `"${this.venvPython}" -m pip install ${dependencies.join(' ')}`
-                : `"${this.venvPython}" -m pip install ${dependencies.join(' ')}`;
+            // Check if virtual environment python exists
+            if (!fs.existsSync(this.venvPython)) {
+                this.log(`Virtual environment Python not found at ${this.venvPython}`, 'warning');
+                this.log('Trying alternative activation method...', 'progress');
                 
-            await this.runCommand(installCmd);
+                // Use activation script instead
+                const activateCmd = this.isWindows
+                    ? `"${this.venvActivate}" && pip install ${dependencies.join(' ')}`
+                    : `source "${this.venvActivate}" && pip install ${dependencies.join(' ')}`;
+                    
+                await this.runCommand(activateCmd, { shell: true });
+            } else {
+                // Use the virtual environment python directly
+                const installCmd = `"${this.venvPython}" -m pip install ${dependencies.join(' ')}`;
+                await this.runCommand(installCmd);
+            }
+            
             this.log('Python dependencies installed successfully', 'success');
         } catch (error) {
-            throw new Error(`Failed to install dependencies: ${error.stderr || error.message}`);
+            // Fallback: try with system Python + --user
+            this.log('Virtual environment installation failed, trying system Python with --user flag...', 'warning');
+            try {
+                const fallbackCmd = `${this.pythonCmd} -m pip install --user ${dependencies.join(' ')}`;
+                await this.runCommand(fallbackCmd);
+                this.log('Dependencies installed with system Python (--user)', 'success');
+            } catch (fallbackError) {
+                throw new Error(`Failed to install dependencies: ${error.stderr || error.message}. Fallback also failed: ${fallbackError.stderr || fallbackError.message}`);
+            }
         }
     }
 
@@ -162,9 +181,18 @@ import pydantic_settings
 print("All dependencies imported successfully")
             `;
             
-            const testCmd = this.isWindows
-                ? `"${this.venvPython}" -c "${testScript.replace(/\n/g, '; ')}"`
-                : `"${this.venvPython}" -c "${testScript}"`;
+            let testCmd;
+            if (fs.existsSync(this.venvPython)) {
+                // Use virtual environment python
+                testCmd = this.isWindows
+                    ? `"${this.venvPython}" -c "${testScript.replace(/\n/g, '; ')}"`
+                    : `"${this.venvPython}" -c "${testScript}"`;
+            } else {
+                // Use system python
+                testCmd = this.isWindows
+                    ? `${this.pythonCmd} -c "${testScript.replace(/\n/g, '; ')}"`
+                    : `${this.pythonCmd} -c "${testScript}"`;
+            }
                 
             await this.runCommand(testCmd, { silent: true });
             this.log('All Python dependencies are working correctly', 'success');
@@ -182,10 +210,13 @@ print("All dependencies imported successfully")
         const mcpServerPath = path.join(nodeModulesPath, 'mcp_server.py');
         const srcPath = path.join(nodeModulesPath, 'src');
         
+        // Use virtual environment python if it exists, otherwise system python
+        const pythonExecutable = fs.existsSync(this.venvPython) ? this.venvPython : this.pythonCmd;
+        
         const config = {
             mcpServers: {
                 drms: {
-                    command: this.venvPython,
+                    command: pythonExecutable,
                     args: ['mcp_server.py'],
                     cwd: nodeModulesPath,
                     env: {
