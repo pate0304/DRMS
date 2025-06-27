@@ -1,0 +1,10 @@
+{
+  "mcp": {
+    "servers": {
+      "drms": {
+        "url": "https://mcp.drms.dev/mcp",
+        "transport": "http"
+      }
+    }
+  }
+}

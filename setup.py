@@ -56,6 +56,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
+            "drms=src.drms:main",
             "drms-server=mcp_server:main",
             "drms-api=drms_api:main",
             "drms-demo=examples.demo_search:main",

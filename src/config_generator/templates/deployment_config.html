@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Configuration - DRMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-8">
+                <a href="/" class="text-blue-600 hover:text-blue-800 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    Deployment Configuration Generator
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Generate deployment configurations for various platforms
+                </p>
+            </header>
+
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <form id="deploymentConfigForm" class="space-y-6">
+                    <!-- Deployment Type Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Select Deployment Type
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {% for deploy_key, deploy_info in deployment_configs.items() %}
+                            <label class="relative">
+                                <input type="radio" name="deployment_type" value="{{ deploy_key }}" class="sr-only" required>
+                                <div class="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors deployment-option">
+                                    <div class="flex items-center">
+                                        <div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 radio-indicator"></div>
+                                        <div>
+                                            <h3 class="font-semibold text-gray-900">{{ deploy_info.name }}</h3>
+                                            <p class="text-sm text-gray-600">{{ deploy_info.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Configuration Options -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="port" class="block text-sm font-medium text-gray-700 mb-2">
+                                Port
+                            </label>
+                            <input type="number" id="port" name="port" value="8000" min="1" max="65535"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Port for the DRMS server</p>
+                        </div>
+
+                        <div>
+                            <label for="replicas" class="block text-sm font-medium text-gray-700 mb-2">
+                                Replicas
+                            </label>
+                            <input type="number" id="replicas" name="replicas" value="2" min="1" max="20"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Number of instances to run</p>
+                        </div>
+
+                        <div>
+                            <label for="log_level" class="block text-sm font-medium text-gray-700 mb-2">
+                                Log Level
+                            </label>
+                            <select id="log_level" name="log_level" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                                <option value="DEBUG">DEBUG</option>
+                                <option value="INFO" selected>INFO</option>
+                                <option value="WARNING">WARNING</option>
+                                <option value="ERROR">ERROR</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="openai_key" class="block text-sm font-medium text-gray-700 mb-2">
+                                OpenAI API Key
+                            </label>
+                            <input type="password" id="openai_key" name="openai_key" placeholder="sk-..."
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            <p class="text-xs text-gray-500 mt-1">Leave empty to use environment variable</p>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="border-t pt-6">
+                        <button type="button" id="toggleAdvanced" class="flex items-center text-gray-600 hover:text-gray-800">
+                            <svg id="advancedIcon" class="w-4 h-4 mr-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            Advanced Options
+                        </button>
+                        
+                        <div id="advancedOptions" class="hidden mt-4 grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="memory_limit" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Memory Limit (MB)
+                                </label>
+                                <input type="number" id="memory_limit" name="memory_limit" value="1024" min="256"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+
+                            <div>
+                                <label for="cpu_limit" class="block text-sm font-medium text-gray-700 mb-2">
+                                    CPU Limit (cores)
+                                </label>
+                                <input type="number" id="cpu_limit" name="cpu_limit" value="1" min="0.1" step="0.1"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+
+                            <div>
+                                <label for="storage_size" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Storage Size (GB)
+                                </label>
+                                <input type="number" id="storage_size" name="storage_size" value="10" min="1"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+
+                            <div>
+                                <label for="namespace" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Namespace
+                                </label>
+                                <input type="text" id="namespace" name="namespace" value="drms" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="flex justify-center pt-6">
+                        <button type="submit" 
+                                class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition duration-200 flex items-center">
+                            Generate Deployment Config
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v10a4 4 0 01-4 4z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Configuration Output -->
+            <div id="configOutput" class="mt-8 hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-gray-900">Generated Deployment Configuration</h2>
+                        <div class="flex space-x-2">
+                            <button id="downloadAll" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
+                                Download All Files
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="configFiles" class="space-y-6">
+                        <!-- Generated files will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="mt-8 bg-blue-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-blue-900 mb-2">📋 Deployment Instructions</h3>
+                <div id="instructions" class="text-blue-800">
+                    <p>Select a deployment type to see specific instructions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle deployment type selection
+        document.querySelectorAll('input[name="deployment_type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.deployment-option').forEach(option => {
+                    option.classList.remove('border-green-500', 'bg-green-50');
+                    option.classList.add('border-gray-200');
+                    option.querySelector('.radio-indicator').classList.remove('border-green-500', 'bg-green-500');
+                    option.querySelector('.radio-indicator').classList.add('border-gray-300');
+                });
+                
+                const selectedOption = this.closest('label').querySelector('.deployment-option');
+                selectedOption.classList.remove('border-gray-200');
+                selectedOption.classList.add('border-green-500', 'bg-green-50');
+                selectedOption.querySelector('.radio-indicator').classList.remove('border-gray-300');
+                selectedOption.querySelector('.radio-indicator').classList.add('border-green-500', 'bg-green-500');
+
+                // Update instructions
+                updateInstructions(this.value);
+            });
+        });
+
+        // Toggle advanced options
+        document.getElementById('toggleAdvanced').addEventListener('click', function() {
+            const advancedOptions = document.getElementById('advancedOptions');
+            const icon = document.getElementById('advancedIcon');
+            
+            if (advancedOptions.classList.contains('hidden')) {
+                advancedOptions.classList.remove('hidden');
+                icon.classList.add('rotate-90');
+            } else {
+                advancedOptions.classList.add('hidden');
+                icon.classList.remove('rotate-90');
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('deploymentConfigForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/generate/deployment', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate configuration');
+                }
+                
+                const result = await response.json();
+                
+                // Display the configuration files
+                displayConfigFiles(result.files, result.deployment_type);
+                document.getElementById('configOutput').classList.remove('hidden');
+                
+                // Scroll to output
+                document.getElementById('configOutput').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                alert('Error generating configuration: ' + error.message);
+            }
+        });
+
+        function displayConfigFiles(files, deploymentType) {
+            const container = document.getElementById('configFiles');
+            container.innerHTML = '';
+
+            Object.entries(files).forEach(([filename, content]) => {
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'border rounded-lg overflow-hidden';
+                
+                fileDiv.innerHTML = `
+                    <div class="bg-gray-100 px-4 py-2 flex justify-between items-center">
+                        <span class="font-medium text-gray-900">${filename}</span>
+                        <div class="flex space-x-2">
+                            <button onclick="copyToClipboard('${filename}')" class="text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300">
+                                Copy
+                            </button>
+                            <button onclick="downloadFile('${filename}', \`${content.replace(/`/g, '\\`')}\`)" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                    <pre class="bg-gray-900 text-green-400 p-4 overflow-x-auto text-sm" id="content-${filename}">${content}</pre>
+                `;
+                
+                container.appendChild(fileDiv);
+            });
+        }
+
+        function copyToClipboard(filename) {
+            const content = document.getElementById(`content-${filename}`).textContent;
+            navigator.clipboard.writeText(content).then(function() {
+                // Show success feedback
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('bg-green-100', 'text-green-700');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-100', 'text-green-700');
+                }, 2000);
+            });
+        }
+
+        function downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function updateInstructions(deploymentType) {
+            const instructions = document.getElementById('instructions');
+            
+            const instructionMap = {
+                'docker': `
+                    <h4 class="font-semibold mb-2">Docker Deployment:</h4>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Save the generated docker-compose.yml file</li>
+                        <li>Run: <code class="bg-blue-100 px-1 rounded">docker-compose up -d</code></li>
+                        <li>Access DRMS at http://localhost:8000</li>
+                        <li>Stop with: <code class="bg-blue-100 px-1 rounded">docker-compose down</code></li>
+                    </ol>
+                `,
+                'kubernetes': `
+                    <h4 class="font-semibold mb-2">Kubernetes Deployment:</h4>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Save the generated YAML files</li>
+                        <li>Apply: <code class="bg-blue-100 px-1 rounded">kubectl apply -f deployment.yml</code></li>
+                        <li>Check status: <code class="bg-blue-100 px-1 rounded">kubectl get pods</code></li>
+                        <li>Access via LoadBalancer or port-forward</li>
+                    </ol>
+                `
+            };
+            
+            instructions.innerHTML = instructionMap[deploymentType] || '<p>Select a deployment type to see instructions.</p>';
+        }
+
+        // Download all files functionality
+        document.getElementById('downloadAll').addEventListener('click', function() {
+            const files = document.querySelectorAll('#configFiles pre');
+            const zip = new JSZip();
+            
+            files.forEach(pre => {
+                const filename = pre.id.replace('content-', '');
+                const content = pre.textContent;
+                zip.file(filename, content);
+            });
+            
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'drms-deployment-config.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+    
+    <!-- JSZip for downloading all files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</body>
+</html>

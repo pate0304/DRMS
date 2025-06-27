@@ -1,0 +1,63 @@
+# Multi-stage build for production
+FROM python:3.11-slim as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy requirements and install dependencies
+COPY requirements-minimal.txt .
+RUN pip install --no-cache-dir -r requirements-minimal.txt
+
+# Production stage
+FROM python:3.11-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r drms && useradd -r -g drms drms
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY --chown=drms:drms src/ src/
+COPY --chown=drms:drms mcp_server.py .
+COPY --chown=drms:drms drms_api.py .
+COPY --chown=drms:drms .env.example .env
+
+# Create necessary directories
+RUN mkdir -p chroma_db data/cache data/libraries logs \
+    && chown -R drms:drms chroma_db data logs
+
+# Switch to non-root user
+USER drms
+
+# Environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DRMS_API_HOST=0.0.0.0
+ENV DRMS_API_PORT=8000
+
+# Expose ports
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["python", "drms_api.py", "--host", "0.0.0.0", "--port", "8000"]

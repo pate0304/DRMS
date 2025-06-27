@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "drms": {
+      "command": "npx",
+      "args": ["-y", "@drms/mcp-server"],
+      "cwd": "/tmp/drms-workspace"
+    }
+  }
+}

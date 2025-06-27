@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "drms": {
+      "command": "npx",
+      "args": ["-y", "@drms/mcp-server"],
+      "env": {
+        "DRMS_LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}

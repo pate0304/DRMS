@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDE Configuration - DRMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-8">
+                <a href="/" class="text-blue-600 hover:text-blue-800 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    IDE Configuration Generator
+                </h1>
+                <p class="text-xl text-gray-600">
+                    Generate MCP configuration files for your IDE
+                </p>
+            </header>
+
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <form id="ideConfigForm" class="space-y-6">
+                    <!-- IDE Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Select Your IDE
+                        </label>
+                        <div class="grid grid-cols-2 gap-4">
+                            {% for ide_key, ide_info in ide_configs.items() %}
+                            <label class="relative">
+                                <input type="radio" name="ide" value="{{ ide_key }}" class="sr-only" required>
+                                <div class="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-blue-300 transition-colors ide-option">
+                                    <div class="flex items-center">
+                                        <div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 radio-indicator"></div>
+                                        <div>
+                                            <h3 class="font-semibold text-gray-900">{{ ide_info.name }}</h3>
+                                            <p class="text-sm text-gray-600">{{ ide_info.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Configuration Options -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="host" class="block text-sm font-medium text-gray-700 mb-2">
+                                Host
+                            </label>
+                            <input type="text" id="host" name="host" value="localhost" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="port" class="block text-sm font-medium text-gray-700 mb-2">
+                                Port
+                            </label>
+                            <input type="number" id="port" name="port" value="8000" min="1" max="65535"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="log_level" class="block text-sm font-medium text-gray-700 mb-2">
+                                Log Level
+                            </label>
+                            <select id="log_level" name="log_level" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="DEBUG">DEBUG</option>
+                                <option value="INFO" selected>INFO</option>
+                                <option value="WARNING">WARNING</option>
+                                <option value="ERROR">ERROR</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="custom_args" class="block text-sm font-medium text-gray-700 mb-2">
+                                Custom Arguments
+                            </label>
+                            <input type="text" id="custom_args" name="custom_args" placeholder="--verbose --cache-size 1000"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="flex justify-center">
+                        <button type="submit" 
+                                class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-200 flex items-center">
+                            Generate Configuration
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v10a4 4 0 01-4 4z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Configuration Output -->
+            <div id="configOutput" class="mt-8 hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-gray-900">Generated Configuration</h2>
+                        <div class="flex space-x-2">
+                            <button id="copyConfig" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-200">
+                                Copy
+                            </button>
+                            <button id="downloadConfig" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">
+                            Save this configuration as: <code id="configFilename" class="bg-gray-100 px-2 py-1 rounded text-sm"></code>
+                        </p>
+                    </div>
+                    
+                    <pre id="configContent" class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm"></pre>
+                </div>
+            </div>
+
+            <!-- Setup Instructions -->
+            <div id="setupInstructions" class="mt-8 hidden">
+                <div class="bg-blue-50 rounded-lg p-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-lg font-semibold text-blue-900 mb-2">📋 Setup Instructions</h3>
+                            <div id="instructionContent" class="text-blue-800">
+                                <!-- Instructions will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle IDE selection
+        document.querySelectorAll('input[name="ide"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.ide-option').forEach(option => {
+                    option.classList.remove('border-blue-500', 'bg-blue-50');
+                    option.classList.add('border-gray-200');
+                    option.querySelector('.radio-indicator').classList.remove('border-blue-500', 'bg-blue-500');
+                    option.querySelector('.radio-indicator').classList.add('border-gray-300');
+                });
+                
+                const selectedOption = this.closest('label').querySelector('.ide-option');
+                selectedOption.classList.remove('border-gray-200');
+                selectedOption.classList.add('border-blue-500', 'bg-blue-50');
+                selectedOption.querySelector('.radio-indicator').classList.remove('border-gray-300');
+                selectedOption.querySelector('.radio-indicator').classList.add('border-blue-500', 'bg-blue-500');
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('ideConfigForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/generate/ide', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate configuration');
+                }
+                
+                const result = await response.json();
+                
+                // Display the configuration
+                document.getElementById('configContent').textContent = JSON.stringify(result.config, null, 2);
+                document.getElementById('configFilename').textContent = result.filename;
+                document.getElementById('configOutput').classList.remove('hidden');
+                
+                // Show setup instructions
+                const selectedIDE = formData.get('ide');
+                showSetupInstructions(selectedIDE, result.filename);
+                
+                // Scroll to output
+                document.getElementById('configOutput').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                alert('Error generating configuration: ' + error.message);
+            }
+        });
+
+        // Copy configuration
+        document.getElementById('copyConfig').addEventListener('click', function() {
+            const configText = document.getElementById('configContent').textContent;
+            navigator.clipboard.writeText(configText).then(function() {
+                const button = document.getElementById('copyConfig');
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('bg-green-100', 'text-green-700');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-100', 'text-green-700');
+                }, 2000);
+            });
+        });
+
+        // Download configuration
+        document.getElementById('downloadConfig').addEventListener('click', function() {
+            const configText = document.getElementById('configContent').textContent;
+            const filename = document.getElementById('configFilename').textContent;
+            
+            const blob = new Blob([configText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Show setup instructions based on IDE
+        function showSetupInstructions(ide, filename) {
+            const instructionContent = document.getElementById('instructionContent');
+            let instructions = '';
+
+            switch(ide) {
+                case 'cursor':
+                    instructions = `
+                        <h4 class="font-semibold mb-2">Cursor Setup:</h4>
+                        <ol class="list-decimal list-inside space-y-1 mb-4">
+                            <li>Save the configuration as <code class="bg-blue-100 px-1 rounded">${filename}</code></li>
+                            <li>Open Cursor and go to Settings</li>
+                            <li>Navigate to MCP Servers section</li>
+                            <li>Import the configuration file</li>
+                            <li>Restart Cursor to activate DRMS</li>
+                        </ol>
+                        <p class="text-sm"><strong>Note:</strong> Make sure DRMS is installed and running before use.</p>
+                    `;
+                    break;
+                case 'vscode':
+                    instructions = `
+                        <h4 class="font-semibold mb-2">VS Code Setup:</h4>
+                        <ol class="list-decimal list-inside space-y-1 mb-4">
+                            <li>Install the MCP extension for VS Code</li>
+                            <li>Save the configuration as <code class="bg-blue-100 px-1 rounded">${filename}</code></li>
+                            <li>Open VS Code settings (Ctrl/Cmd + ,)</li>
+                            <li>Search for "MCP" and add the configuration</li>
+                            <li>Reload VS Code window</li>
+                        </ol>
+                        <p class="text-sm"><strong>Note:</strong> Ensure DRMS server is running on the specified port.</p>
+                    `;
+                    break;
+                case 'windsurf':
+                    instructions = `
+                        <h4 class="font-semibold mb-2">Windsurf Setup:</h4>
+                        <ol class="list-decimal list-inside space-y-1 mb-4">
+                            <li>Save the configuration as <code class="bg-blue-100 px-1 rounded">${filename}</code></li>
+                            <li>Open Windsurf preferences</li>
+                            <li>Go to MCP Servers configuration</li>
+                            <li>Add or import the DRMS configuration</li>
+                            <li>Apply settings and restart Windsurf</li>
+                        </ol>
+                        <p class="text-sm"><strong>Note:</strong> DRMS must be accessible at the configured host and port.</p>
+                    `;
+                    break;
+                case 'claude-dev':
+                    instructions = `
+                        <h4 class="font-semibold mb-2">Claude Dev Setup:</h4>
+                        <ol class="list-decimal list-inside space-y-1 mb-4">
+                            <li>Install the Claude Dev extension</li>
+                            <li>Save the configuration as <code class="bg-blue-100 px-1 rounded">${filename}</code></li>
+                            <li>Open extension settings</li>
+                            <li>Add DRMS as a new MCP server</li>
+                            <li>Test the connection</li>
+                        </ol>
+                        <p class="text-sm"><strong>Note:</strong> Verify DRMS installation with <code class="bg-blue-100 px-1 rounded">drms --version</code></p>
+                    `;
+                    break;
+                default:
+                    instructions = '<p>Configuration generated successfully. Follow your IDE\'s MCP integration guide.</p>';
+            }
+
+            instructionContent.innerHTML = instructions;
+            document.getElementById('setupInstructions').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
