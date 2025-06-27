@@ -48,11 +48,12 @@ function findMCPServer() {
 
 function showHelp() {
     console.log(`
-DRMS - Documentation RAG MCP Server v1.0.0
+DRMS - Documentation RAG MCP Server v1.1.1
 
 Usage: drms [command] [options]
 
 Commands:
+  install         Auto-install Python dependencies and setup
   start           Start the MCP server
   api            Start the REST API server
   add-source     Add a documentation source
@@ -61,6 +62,7 @@ Commands:
   test           Run tests
   setup          Run interactive setup
   config         Show configuration
+  doctor         Diagnose installation issues
   version        Show version
 
 Options:
@@ -70,6 +72,7 @@ Options:
   --log-level    Set log level (DEBUG, INFO, WARNING, ERROR)
 
 Examples:
+  drms install           # Auto-setup everything
   drms start
   drms api --port 8001
   drms add-source https://docs.python.org
@@ -90,6 +93,14 @@ function main() {
     const command = args[0];
     
     // Handle special commands
+    if (command === 'install') {
+        // Run the smart installer
+        const { DRMSInstaller } = require('./install.js');
+        const installer = new DRMSInstaller();
+        installer.install();
+        return;
+    }
+    
     if (command === 'config') {
         // Run the configuration generator
         const configScript = path.join(path.dirname(__filename), '..', 'generate_config.py');
@@ -105,6 +116,41 @@ function main() {
             console.error('❌ Failed to run configuration generator:', err.message);
             process.exit(1);
         });
+        return;
+    }
+    
+    if (command === 'doctor') {
+        // Run installation diagnostics
+        const { DRMSInstaller } = require('./install.js');
+        const installer = new DRMSInstaller();
+        
+        console.log('🔍 DRMS Installation Diagnostics\n');
+        
+        installer.checkPython()
+            .then(() => installer.checkPip())
+            .then(() => {
+                if (fs.existsSync(installer.drmsEnvPath)) {
+                    installer.log('Virtual environment exists', 'success');
+                    return installer.testInstallation();
+                } else {
+                    installer.log('Virtual environment not found', 'warning');
+                    installer.log('Run: drms install', 'info');
+                    return false;
+                }
+            })
+            .then((testResult) => {
+                if (testResult) {
+                    installer.log('✅ All systems operational!', 'success');
+                    installer.generateConfiguration();
+                } else {
+                    installer.log('⚠️ Issues detected. Run: drms install', 'warning');
+                }
+            })
+            .catch((error) => {
+                installer.log(`❌ ${error.message}`, 'error');
+                installer.log('💡 Try: drms install', 'info');
+                process.exit(1);
+            });
         return;
     }
     

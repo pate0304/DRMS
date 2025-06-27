@@ -14,7 +14,8 @@
     "demo": "python examples/demo_search.py",
     "install-deps": "pip install -r requirements-minimal.txt",
     "docker:build": "docker build -t drms/server .",
-    "docker:run": "docker run -p 8000:8000 drms/server"
+    "docker:run": "docker run -p 8000:8000 drms/server",
+    "postinstall": "echo '📦 DRMS installed! Run: npx drms install (for auto-setup) or drms --help'"
   },
   "repository": {
     "type": "git",

@@ -13,20 +13,35 @@ DRMS provides your AI coding assistants with instant access to up-to-date docume
 
 ## 🛠️ Quick Install
 
-### Step 1: Install DRMS
+### One-Command Setup (Recommended) ⚡
 ```bash
-# Install the DRMS package globally
+# Install globally
+npm install -g drms-mcp-server
+
+# Auto-setup everything (Python deps, virtual env, config)
+npx drms install
+```
+
+That's it! The installer will:
+- ✅ Detect your Python installation  
+- ✅ Create a virtual environment
+- ✅ Install all Python dependencies
+- ✅ Generate configuration for your IDE
+- ✅ Test the installation
+
+### Manual Setup (Advanced)
+If you prefer manual control:
+
+#### **Step 1: Install DRMS**
+```bash
 npm install -g drms-mcp-server
 ```
 
-### Step 2: Install Python Dependencies
-Choose the method that works for your system:
-
-#### **Option A: Virtual Environment (Recommended)**
+#### **Step 2: Create Virtual Environment**
 ```bash
 # Create a dedicated virtual environment for DRMS
-python3 -m venv ~/.drms-env
-source ~/.drms-env/bin/activate  # On Windows: ~/.drms-env\Scripts\activate
+python3 -m venv ~/.drms/venv
+source ~/.drms/venv/bin/activate  # On Windows: ~/.drms/venv\Scripts\activate
 
 # Install dependencies in the virtual environment
 pip install mcp chromadb sentence-transformers requests beautifulsoup4 pydantic-settings
@@ -175,16 +190,25 @@ This means the MCP server is connecting but failing to start properly.
 
 **Quick Fix:**
 ```bash
+# Run automated diagnostics
+drms doctor
+
+# If issues found, run auto-installer
+drms install
+
 # Test if DRMS starts correctly
 drms start
-
-# If you see "ModuleNotFoundError: No module named 'mcp'":
-# Use virtual environment approach from Step 2 above
 ```
 
-### **Generate Your Configuration**
+### **Installation Issues**
 ```bash
-# Use the built-in configuration generator
+# Run full health check and diagnostics
+drms doctor
+
+# Re-run the auto-installer
+drms install
+
+# Generate fresh configuration
 drms config
 
 # This will detect your system and show the exact config to use
