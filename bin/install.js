@@ -423,8 +423,18 @@ print("All dependencies imported successfully")
     async generateConfiguration() {
         this.log('Generating IDE configuration...', 'progress');
         
-        const nodeModulesPath = path.dirname(path.dirname(__filename));
-        const srcPath = path.join(nodeModulesPath, 'src');
+        // Try to find the correct package path
+        let packagePath;
+        try {
+            // First try to resolve as npm package
+            packagePath = path.dirname(require.resolve('drms-mcp-server/package.json'));
+        } catch (error) {
+            // Fall back to local installation
+            packagePath = path.dirname(path.dirname(__filename));
+        }
+        
+        const srcPath = path.join(packagePath, 'src');
+        const mcpServerPath = path.join(packagePath, 'mcp_server.py');
         
         // Determine the best Python executable to use
         let pythonExecutable;
@@ -466,8 +476,8 @@ print("All dependencies imported successfully")
             mcpServers: {
                 drms: {
                     command: pythonExecutable,
-                    args: ['mcp_server.py'],
-                    cwd: nodeModulesPath,
+                    args: [mcpServerPath],
+                    cwd: packagePath,
                     env: env
                 }
             }

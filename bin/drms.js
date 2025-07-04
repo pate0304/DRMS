@@ -42,6 +42,26 @@ function findMCPServer() {
         // Ignore resolution errors
     }
     
+    // Check for global npm installation
+    try {
+        const globalPath = require.resolve('drms-mcp-server/mcp_server.py');
+        if (fs.existsSync(globalPath)) {
+            return { type: 'npm-global', path: globalPath };
+        }
+    } catch (e) {
+        // Ignore resolution errors
+    }
+    
+    // Check for local node_modules installation
+    try {
+        const localNodeModulesPath = path.join(process.cwd(), 'node_modules', 'drms-mcp-server', 'mcp_server.py');
+        if (fs.existsSync(localNodeModulesPath)) {
+            return { type: 'npm-local', path: localNodeModulesPath };
+        }
+    } catch (e) {
+        // Ignore resolution errors
+    }
+    
     // Fall back to installed package
     return { type: 'package', path: 'drms' };
 }
@@ -82,7 +102,7 @@ For more information: https://github.com/pate0304/DRMS
 `);
 }
 
-function main() {
+async function main() {
     const args = process.argv.slice(2);
     
     if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
@@ -159,8 +179,30 @@ function main() {
     
     // Check if we can find a Python executable (for venv) or if python3 exists (for system)
     if (pythonExe !== 'python3' && !fs.existsSync(pythonExe)) {
-        console.error('❌ DRMS not properly installed. Run: npm install -g drms-mcp-server');
+        console.error('❌ DRMS not properly installed. Run: drms install');
         process.exit(1);
+    }
+    
+    // Auto-check for Python dependencies if this is the first run
+    if (command !== 'install' && command !== 'doctor' && command !== 'config' && !fs.existsSync(VENV_PATH)) {
+        console.log('🔍 First time running DRMS - checking Python dependencies...');
+        
+        // Try to run the installer automatically
+        try {
+            const { DRMSInstaller } = require('./install.js');
+            const installer = new DRMSInstaller();
+            
+            // Quick check if dependencies are available
+            const testResult = await installer.testInstallation();
+            if (!testResult) {
+                console.log('⚠️  Python dependencies not found. Run: drms install');
+                console.log('   Or run with --skip-check to bypass this check');
+                process.exit(1);
+            }
+        } catch (error) {
+            console.log('⚠️  Could not verify Python dependencies. Run: drms install');
+            process.exit(1);
+        }
     }
     
     let pythonArgs;
@@ -169,7 +211,7 @@ function main() {
     if (server.type === 'source') {
         pythonArgs = [server.path, ...args];
         workingDir = path.dirname(server.path);
-    } else if (server.type === 'npm') {
+    } else if (server.type === 'npm' || server.type === 'npm-global' || server.type === 'npm-local') {
         pythonArgs = [server.path, ...args];
         workingDir = path.dirname(server.path);
     } else {
@@ -184,7 +226,7 @@ function main() {
     };
     
     // Add Python path for source and npm installations
-    if (server.type === 'source' || server.type === 'npm') {
+    if (server.type === 'source' || server.type === 'npm' || server.type === 'npm-global' || server.type === 'npm-local') {
         const srcPath = path.join(path.dirname(server.path), 'src');
         env.PYTHONPATH = srcPath;
     }
@@ -219,7 +261,10 @@ function main() {
 }
 
 if (require.main === module) {
-    main();
+    main().catch(error => {
+        console.error('❌ Error:', error.message);
+        process.exit(1);
+    });
 }
 
 module.exports = { main };
