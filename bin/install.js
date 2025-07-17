@@ -425,13 +425,33 @@ print("All dependencies imported successfully")
         
         // Try to find the correct package path
         let packagePath;
-        try {
-            // First try to resolve as npm package
-            packagePath = path.dirname(require.resolve('drms-mcp-server/package.json'));
-        } catch (error) {
-            // Fall back to local installation
+        
+        // Use process.argv[1] to detect if we're running from a global npm installation
+        const actualScriptPath = process.argv[1] || __filename;
+        const isGlobalInstall = actualScriptPath.includes('node_modules/drms-mcp-server') || 
+                               actualScriptPath.includes('.nvm/') || 
+                               actualScriptPath.includes('/usr/local/');
+        
+        
+        if (isGlobalInstall) {
+            // For global installations, find the actual module directory
+            try {
+                packagePath = path.dirname(require.resolve('drms-mcp-server/package.json'));
+            } catch (error) {
+                // Fallback: derive from the actual script location
+                if (actualScriptPath.includes('node_modules/drms-mcp-server')) {
+                    const moduleIndex = actualScriptPath.indexOf('node_modules/drms-mcp-server');
+                    packagePath = actualScriptPath.substring(0, moduleIndex) + 'node_modules/drms-mcp-server';
+                } else {
+                    // Last resort: try to find it relative to the binary
+                    packagePath = path.resolve(path.dirname(actualScriptPath), '..', 'lib', 'node_modules', 'drms-mcp-server');
+                }
+            }
+        } else {
+            // For local development
             packagePath = path.dirname(path.dirname(__filename));
         }
+        
         
         const srcPath = path.join(packagePath, 'src');
         const mcpServerPath = path.join(packagePath, 'mcp_server.py');

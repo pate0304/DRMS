@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src-node/server.ts",
+    "dev": "tsx src/server.ts",
     "start": "node dist/server.js",
     "api": "node dist/api.js",
     "test": "vitest",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "watch": "tsc --watch",
-    "cli": "tsx src-node/cli.ts",
+    "cli": "tsx src/cli.ts",
     "demo": "tsx src/examples/demo-search.ts"
   },
   "keywords": [

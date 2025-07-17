@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "drms-node-simple": {
+      "command": "node",
+      "args": ["dist/server-simple.js"],
+      "cwd": "/Users/shiva-mac/Documents/CB/DRMS"
+    }
+  }
+}

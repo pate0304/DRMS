@@ -122,18 +122,18 @@ async function main() {
     }
     
     if (command === 'config') {
-        // Run the configuration generator
-        const configScript = path.join(path.dirname(__filename), '..', 'generate_config.py');
-        const child = spawn('python3', [configScript], {
-            stdio: 'inherit'
-        });
+        // Use the installer's generateConfiguration method directly
+        console.log('🔧 Generating configuration...');
         
-        child.on('close', (code) => {
-            process.exit(code);
-        });
+        // Find the correct install.js path
+        const installPath = path.join(path.dirname(__filename), 'install.js');
         
-        child.on('error', (err) => {
-            console.error('❌ Failed to run configuration generator:', err.message);
+        const { DRMSInstaller } = require(installPath);
+        const installer = new DRMSInstaller();
+        installer.generateConfiguration().then(() => {
+            console.log('✅ Configuration generated successfully!');
+        }).catch((error) => {
+            console.error('❌ Failed to generate configuration:', error.message);
             process.exit(1);
         });
         return;
@@ -173,6 +173,7 @@ async function main() {
             });
         return;
     }
+    
     
     const pythonExe = findPythonExecutable();
     const server = findMCPServer();

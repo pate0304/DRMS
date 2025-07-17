@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "drms-node": {
+      "command": "node",
+      "args": ["dist/server.js"],
+      "cwd": "/Users/shiva-mac/Documents/CB/DRMS",
+      "env": {
+        "NODE_ENV": "production",
+        "DRMS_VECTOR_DB_PATH": "/Users/shiva-mac/Documents/CB/DRMS/chroma_db_node",
+        "DRMS_CACHE_DIR": "/Users/shiva-mac/Documents/CB/DRMS/data/cache_node"
+      }
+    }
+  }
+}
